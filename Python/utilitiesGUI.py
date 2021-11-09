@@ -11,3 +11,7 @@ class Canvas(FigureCanvas):
     def plotAudio(self, inSamples):
         self.ax.plot(inSamples)
         self.ax.axis("off")
+
+def computeInterval(inBpm, inSampleRate):
+    interval = int((60 / inBpm) * inSampleRate)
+    return interval
