@@ -34,39 +34,12 @@ class Main(QMainWindow, QWidget):
 
     def startCreating(self):
         self.plotAudio()
-        utilitiesGUI.makeKickPattern(self.path, 120, 4)
+        audio,samplerate = utilitiesGUI.makeCut(self.path,400)
+        audio = utilitiesGUI.applyEnvelope(audio,samplerate,200,30)
+        sf.write('../Results/corte.wav', audio, samplerate, 'PCM_24')
+        utilitiesGUI.makeKickPattern(audio, 120, 4, samplerate)
 
 
-'''def applyEnvelope(inAudio, inSampleRate, inAttack, inRelease):
-
-    lineAttack = 0
-    lineRelease = 1
-
-    attackinSamples = convertMilliToSamples(inAttack, inSampleRate)
-    releaseinSamples = convertMilliToSamples(inRelease, inSampleRate)
-
-    intervalAttack = 1 / attackinSamples
-    intervalRelease = 1 / releaseinSamples
-
-    for sample in range(int(attackinSamples)):
-        inAudio[sample] *= lineAttack
-        lineAttack += intervalAttack
-
-    startRelease = len(inAudio) - int(releaseinSamples)
-    for sample in range(int(releaseinSamples)):
-        inAudio[sample+startRelease] *= lineRelease
-        lineRelease -= intervalRelease
-
-    return inAudio
-
-def convertMilliToSamples(inValue, inSampleRate):
-    inSec = inValue * 0.001
-    inSamples = inSec * inSampleRate
-    return inSamples
-
-audio, samplerate = sf.read('audios/guitar.wav')
-audio = applyEnvelope(audio, samplerate, 1000, 1000)
-sf.write('Results/Attack.wav', audio, 44100, 'PCM_24')'''
 
 app = QApplication(sys.argv)
 demo = Main()

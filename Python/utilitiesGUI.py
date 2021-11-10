@@ -17,10 +17,11 @@ def computeInterval(inBpm, inSampleRate):
     interval = int((60 / inBpm) * inSampleRate)
     return interval
 
-def makeKickPattern(inPath, inBPM, inNumCompas):
+def makeKickPattern(inAudio, inBPM, inNumCompas,inSampleRate):
 
-    audio, samplerate = sf.read(inPath)
-    kickInterval = computeInterval(inBPM, samplerate)
+    #audio, samplerate = sf.read(inPath)
+    audio = inAudio
+    kickInterval = computeInterval(inBPM, inSampleRate)
     loopKick = []
 
     intervalOne = kickInterval
@@ -60,7 +61,47 @@ def makeKickPattern(inPath, inBPM, inNumCompas):
         for sample in loopKick:
             compasCompleto.append(sample)
 
-    sf.write('../Results/LoopKick.wav', compasCompleto, samplerate, 'PCM_24')
+    sf.write('../Results/LoopKick.wav', compasCompleto, inSampleRate, 'PCM_24')
 
     print("KICK LOOP CREADO")
     print("-----------")
+
+def makeCut (inPath, inLen):
+    finalAudio = []
+    cont = 0
+    audio, samplerate = sf.read(inPath)
+    inLen = convertMilliToSamples(inLen,samplerate)
+    for sample in audio:
+        if cont < inLen:
+            finalAudio.append(sample)
+        cont += 1
+    return finalAudio, samplerate
+
+def convertMilliToSamples(inValue, inSampleRate):
+    inSec = inValue * 0.001
+    inSamples = inSec * inSampleRate
+    return inSamples
+
+def applyEnvelope(inAudio, inSampleRate, inAttack, inRelease):
+
+    lineAttack = 0
+    lineRelease = 1
+
+    attackinSamples = convertMilliToSamples(inAttack, inSampleRate)
+    releaseinSamples = convertMilliToSamples(inRelease, inSampleRate)
+
+    intervalAttack = 1 / attackinSamples
+    intervalRelease = 1 / releaseinSamples
+
+    for sample in range(int(attackinSamples)):
+        inAudio[sample] *= lineAttack
+        lineAttack += intervalAttack
+
+    startRelease = len(inAudio) - int(releaseinSamples)
+    for sample in range(int(releaseinSamples)):
+        inAudio[sample+startRelease] *= lineRelease
+        lineRelease -= intervalRelease
+
+    return inAudio
+
+
