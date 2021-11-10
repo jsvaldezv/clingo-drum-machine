@@ -3,6 +3,11 @@ from PyQt5.QtWidgets import *
 import dragAudio
 import utilitiesGUI
 import soundfile as sf
+import clingo, math
+import numpy as np
+
+
+
 
 class Main(QMainWindow, QWidget):
 
@@ -38,7 +43,27 @@ class Main(QMainWindow, QWidget):
         audio = utilitiesGUI.applyEnvelope(audio,samplerate,200,30)
         sf.write('../Results/corte.wav', audio, samplerate, 'PCM_24')
         utilitiesGUI.makeKickPattern(audio, 120, 4, samplerate)
+        self.getfromClingo()
 
+    def getfromClingo(self):
+        # ** CONFIGURAR Y CARGAR CLINGO *** #
+        control = clingo.Control(utilitiesGUI.clingo_args)
+        control.configuration.solve.models = 5
+        control.load("../remixer.lp")
+        models = []
+
+        # ** GROUNDING *** #
+        print("Grounding...")
+        control.ground([("base", [])])
+        print("------")
+
+        # ** SOLVE *** #
+        print("Solving...")
+        with control.solve(yield_=True) as solve_handle:
+            for model in solve_handle:
+                models.append(model.symbols(shown=True))
+        print("------")
+        print(models)
 
 
 app = QApplication(sys.argv)

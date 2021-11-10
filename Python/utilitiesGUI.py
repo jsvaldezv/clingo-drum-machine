@@ -1,6 +1,15 @@
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import soundfile as sf
+import random
+
+clingo_args = [ "--warn=none",
+                "--sign-def=rnd",
+                "--sign-fix",
+                "--rand-freq=1",
+                "--seed=%s"%random.randint(0,32767),
+                "--restart-on-model",
+                "--enum-mode=record"]
 
 class Canvas(FigureCanvas):
 
