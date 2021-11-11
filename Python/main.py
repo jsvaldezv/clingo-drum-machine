@@ -8,6 +8,9 @@ from scipy.fft import rfft, rfftfreq
 import numpy as np
 from matplotlib import pyplot as plt
 
+from scipy.cluster.hierarchy import centroid, fcluster
+from scipy.spatial.distance import pdist
+
 class Main(QMainWindow, QWidget):
 
     def __init__(self):
@@ -48,9 +51,13 @@ class Main(QMainWindow, QWidget):
     def makeFFT(self, audio, duration, samplerate):
         samples = duration * samplerate
         kickAmp = np.abs(rfft(audio))
-        kickFreq = rfftfreq(samples, 1 / samplerate)
-        plt.plot(kickFreq, np.abs(kickAmp))
-        plt.show()
+        kickFreq = rfftfreq(int(samples), 1 / samplerate)
+        kickCentroid = np.sum(kickAmp * kickFreq) / np.sum(kickAmp)
+        print(kickCentroid)
+
+        '''plt.semilogx(kickFreq, kickAmp)
+        plt.axis([1, samplerate/2, 0, 100])
+        plt.show()'''
 
     def getfromClingo(self):
         # ** CONFIGURAR Y CARGAR CLINGO *** #
