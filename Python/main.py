@@ -7,9 +7,8 @@ import clingo, math
 from scipy.fft import rfft, rfftfreq
 import numpy as np
 from matplotlib import pyplot as plt
-
-from scipy.cluster.hierarchy import centroid, fcluster
-from scipy.spatial.distance import pdist
+import librosa
+'''from pyAudioAnalysis import ShortTermFeatures'''
 
 class Main(QMainWindow, QWidget):
 
@@ -41,23 +40,25 @@ class Main(QMainWindow, QWidget):
 
     def startCreating(self):
         self.plotAudio()
-        audio,samplerate = utilitiesGUI.makeCut(self.path,400)
+        audio, samplerate = utilitiesGUI.makeCut(self.path,400)
         audio = utilitiesGUI.applyEnvelope(audio,samplerate,200,30)
         sf.write('../Results/corte.wav', audio, samplerate, 'PCM_24')
         loop, samplerate, duration = utilitiesGUI.makeKickPattern(audio, 120, 4, samplerate)
         self.getfromClingo()
-        self.makeFFT(loop, duration, samplerate)
+        self.makeAnalysis(loop, duration, samplerate)
 
-    def makeFFT(self, audio, duration, samplerate):
+    def makeAnalysis(self, audio, duration, samplerate):
         samples = duration * samplerate
-        kickAmp = np.abs(rfft(audio))
-        kickFreq = rfftfreq(int(samples), 1 / samplerate)
-        kickCentroid = np.sum(kickAmp * kickFreq) / np.sum(kickAmp)
-        print(kickCentroid)
-
-        '''plt.semilogx(kickFreq, kickAmp)
-        plt.axis([1, samplerate/2, 0, 100])
-        plt.show()'''
+        amplitude = np.abs(rfft(audio))
+        frequency = rfftfreq(int(samples), 1 / samplerate)
+        centroid = np.sum(amplitude * frequency) / np.sum(amplitude)
+        print(centroid)
+        spread = utilitiesGUI.spectralSpread(frequency, amplitude, centroid)
+        print(spread)
+        peakIndex = np.argmax(np.array(amplitude))
+        print(peakIndex)
+        peak = frequency[peakIndex]
+        print(peak)
 
     def getfromClingo(self):
         # ** CONFIGURAR Y CARGAR CLINGO *** #
@@ -78,7 +79,6 @@ class Main(QMainWindow, QWidget):
                 models.append(model.symbols(shown=True))
         print("------")
         print(models)
-
 
 app = QApplication(sys.argv)
 demo = Main()

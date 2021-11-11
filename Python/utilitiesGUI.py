@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import soundfile as sf
 import random
+import math
 
 clingo_args = [ "--warn=none",
                 "--sign-def=rnd",
@@ -115,4 +116,12 @@ def applyEnvelope(inAudio, inSampleRate, inAttack, inRelease):
 
     return inAudio
 
-
+def spectralSpread(inFrequency, inAmplitude, inCentroid):
+    i = 0
+    numerator = 0
+    denominator = 0
+    for frequency in inFrequency:
+        numerator += (frequency - inCentroid) ** 2 * inAmplitude[i]
+        denominator += inAmplitude[i]
+        i += 1
+    return math.sqrt(numerator / denominator)
