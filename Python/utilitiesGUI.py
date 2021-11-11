@@ -75,6 +75,8 @@ def makeKickPattern(inAudio, inBPM, inNumCompas,inSampleRate):
     print("KICK LOOP CREADO")
     print("-----------")
 
+    return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
+
 def makeCut (inPath, inLen):
     finalAudio = []
     cont = 0

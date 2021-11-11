@@ -4,10 +4,9 @@ import dragAudio
 import utilitiesGUI
 import soundfile as sf
 import clingo, math
+from scipy.fft import rfft, rfftfreq
 import numpy as np
-
-
-
+from matplotlib import pyplot as plt
 
 class Main(QMainWindow, QWidget):
 
@@ -42,8 +41,16 @@ class Main(QMainWindow, QWidget):
         audio,samplerate = utilitiesGUI.makeCut(self.path,400)
         audio = utilitiesGUI.applyEnvelope(audio,samplerate,200,30)
         sf.write('../Results/corte.wav', audio, samplerate, 'PCM_24')
-        utilitiesGUI.makeKickPattern(audio, 120, 4, samplerate)
+        loop, samplerate, duration = utilitiesGUI.makeKickPattern(audio, 120, 4, samplerate)
         self.getfromClingo()
+        self.makeFFT(loop, duration, samplerate)
+
+    def makeFFT(self, audio, duration, samplerate):
+        samples = duration * samplerate
+        kickAmp = np.abs(rfft(audio))
+        kickFreq = rfftfreq(samples, 1 / samplerate)
+        plt.plot(kickFreq, np.abs(kickAmp))
+        plt.show()
 
     def getfromClingo(self):
         # ** CONFIGURAR Y CARGAR CLINGO *** #
