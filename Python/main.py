@@ -3,6 +3,9 @@ from PyQt5.QtWidgets import *
 import dragAudio
 import utilitiesGUI
 import soundfile as sf
+from scipy.fft import rfft, rfftfreq
+import numpy as np
+from matplotlib import pyplot as plt
 
 class Main(QMainWindow, QWidget):
 
@@ -34,8 +37,15 @@ class Main(QMainWindow, QWidget):
 
     def startCreating(self):
         self.plotAudio()
-        utilitiesGUI.makeKickPattern(self.path, 120, 4)
+        audio, samplerate, duration = utilitiesGUI.makeKickPattern(self.path, 120, 4)
 
+        ## FFT
+        samples = duration * samplerate
+        kickAmp = rfft(audio)
+        kickFreq = rfftfreq(samples, 1 / samplerate)
+
+        plt.plot(kickFreq, np.abs(kickAmp))
+        plt.show()
 
 '''def applyEnvelope(inAudio, inSampleRate, inAttack, inRelease):
 

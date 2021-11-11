@@ -18,7 +18,6 @@ def computeInterval(inBpm, inSampleRate):
     return interval
 
 def makeKickPattern(inPath, inBPM, inNumCompas):
-
     audio, samplerate = sf.read(inPath)
     kickInterval = computeInterval(inBPM, samplerate)
     loopKick = []
@@ -61,6 +60,7 @@ def makeKickPattern(inPath, inBPM, inNumCompas):
             compasCompleto.append(sample)
 
     sf.write('../Results/LoopKick.wav', compasCompleto, samplerate, 'PCM_24')
+    return compasCompleto, samplerate, (len(compasCompleto) / samplerate)
 
     print("KICK LOOP CREADO")
     print("-----------")
