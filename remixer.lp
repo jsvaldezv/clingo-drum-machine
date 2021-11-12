@@ -41,13 +41,13 @@ rhythm(snare,R) :- rSnare(R).
 rhythm(hihat,R) :- rHihat(R).
 
 %% FX Selection Section
-1 { pitchKick(-12); pitchKick(-18); pitchKick(-24) } 1 :- sound(kick).
+1 { pitchKick(-1200); pitchKick(-1800); pitchKick(-2400) } 1 :- sound(kick). % Cents
 1 { eqKick(1000); eqKick(1700); eqKick(3000) } 1 :- sound(kick). % LPF
 
 pitchSnare(0) :- sound(snare).
 1 { eqSnare(100); eqSnare(200); eqSnare(300) } 1 :- sound(snare). % HPF
 
-1 { pitchHihat(12); pitchHihat(18); pitchHihat(24) } 1 :- sound(hihat).
+1 { pitchHihat(1200); pitchHihat(1800); pitchHihat(2400) } 1 :- sound(hihat). % Cents
 1 { eqHihat(300); eqHihat(500); eqHihat(700) } 1 :- sound(hihat). % HPF
 
 fx(kick,P,E) :- pitchKick(P), eqKick(E).
