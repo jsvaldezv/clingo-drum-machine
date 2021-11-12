@@ -6,9 +6,8 @@ import soundfile as sf
 import clingo, math
 from scipy.fft import rfft, rfftfreq
 import numpy as np
-from matplotlib import pyplot as plt
-import librosa
-'''from pyAudioAnalysis import ShortTermFeatures'''
+import sox
+from pysndfx import AudioEffectsChain
 
 class Main(QMainWindow, QWidget):
 
@@ -17,6 +16,7 @@ class Main(QMainWindow, QWidget):
         self.resize(480, 300)
 
         self.path = "none"
+        self.resultados = []
 
         # LOAD AUDIOS #
         self.btnMix = QPushButton('Create', self)
@@ -40,30 +40,37 @@ class Main(QMainWindow, QWidget):
 
     def startCreating(self):
         self.plotAudio()
-        audio, samplerate = utilitiesGUI.makeCut(self.path,400)
-        audio = utilitiesGUI.applyEnvelope(audio,samplerate,200,30)
-        sf.write('../Results/corte.wav', audio, samplerate, 'PCM_24')
-        loop, samplerate, duration = utilitiesGUI.makeKickPattern(audio, 120, 4, samplerate)
         self.getfromClingo()
-        self.makeAnalysis(loop, duration, samplerate)
+        #audio, samplerate = utilitiesGUI.makeCut(self.path,400)
+        self.soundDesign()
+        '''loop, samplerate, duration = utilitiesGUI.makeKickPattern(audio, 120, 4, samplerate)
+        self.makeAnalysis(loop, duration, samplerate)'''
 
     def makeAnalysis(self, audio, duration, samplerate):
         samples = duration * samplerate
         amplitude = np.abs(rfft(audio))
         frequency = rfftfreq(int(samples), 1 / samplerate)
         centroid = np.sum(amplitude * frequency) / np.sum(amplitude)
-        print(centroid)
         spread = utilitiesGUI.spectralSpread(frequency, amplitude, centroid)
-        print(spread)
         peakIndex = np.argmax(np.array(amplitude))
-        print(peakIndex)
         peak = frequency[peakIndex]
-        print(peak)
+        print("Centroid:", centroid, ", Spread:", spread, ", Peak:", peak)
+
+    def soundDesign(self):
+        for design in self.resultados:
+            for instrument in design:
+                print(instrument)
+                audio, samplerate = utilitiesGUI.makeCut(self.path, 400)
+                audio = utilitiesGUI.applyEnvelope(audio, samplerate, instrument[1], instrument[2])
+                pitch = AudioEffectsChain().pitch(shift=instrument[4])
+                audio = pitch(audio)
+
+                sf.write('../Results/corte.wav', audio, samplerate, 'PCM_24')
 
     def getfromClingo(self):
         # ** CONFIGURAR Y CARGAR CLINGO *** #
         control = clingo.Control(utilitiesGUI.clingo_args)
-        control.configuration.solve.models = 5
+        control.configuration.solve.models = 3
         control.load("../remixer.lp")
         models = []
 
@@ -78,7 +85,29 @@ class Main(QMainWindow, QWidget):
             for model in solve_handle:
                 models.append(model.symbols(shown=True))
         print("------")
-        print(models)
+
+        cont = 0
+        for model in models:
+            resp = []
+            print("Propuesta ", cont + 1)
+            for atom in model:
+                instrument = str(atom.arguments[0])
+                attack = int(str(atom.arguments[1]))
+                release = int(str(atom.arguments[2]))
+                pattern = int(str(atom.arguments[3]))
+                pitchShift = int(str(atom.arguments[4]))
+                eq = int(str(atom.arguments[5]))
+                result = []
+                result.append(instrument)
+                result.append(attack)
+                result.append(release)
+                result.append(pattern)
+                result.append(pitchShift)
+                result.append(eq)
+                resp.append(result)
+                print("Para", instrument, "aplicar:", attack, "de attack,", release, "de release,", pitchShift, "de pitch shift y", eq, "de EQ en el patrón", pattern)
+            self.resultados.append(resp)
+            cont += 1
 
 app = QApplication(sys.argv)
 demo = Main()
