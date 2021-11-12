@@ -43,9 +43,18 @@ class Main(QMainWindow, QWidget):
         audio, samplerate = utilitiesGUI.makeCut(self.path,400)
         audio = utilitiesGUI.applyEnvelope(audio,samplerate,200,30)
         sf.write('../Results/corte.wav', audio, samplerate, 'PCM_24')
-        loop, samplerate, duration = utilitiesGUI.makeKickPattern(audio, 120, 4, samplerate)
+
+        #loop, samplerate, duration = utilitiesGUI.makeKickPattern(audio, 120, 4, samplerate)
+        #loop, samplerate, duration = utilitiesGUI.makeKickPattern2(audio, 120, 4, samplerate)
+        #loop, samplerate, duration = utilitiesGUI.makeSnarePattern(audio, 120, 4, samplerate)
+        loop, samplerate, duration = utilitiesGUI.makeSnarePattern2(audio, 120, 4, samplerate)
+        #loop, samplerate, duration = utilitiesGUI.makeHatPattern(audio, 120, 4, samplerate)
+        #loop, samplerate, duration = utilitiesGUI.makeHatPattern2(audio, 120, 4, samplerate)
+
         self.getfromClingo()
         self.makeAnalysis(loop, duration, samplerate)
+
+
 
     def makeAnalysis(self, audio, duration, samplerate):
         samples = duration * samplerate
