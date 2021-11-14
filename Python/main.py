@@ -38,7 +38,30 @@ class Main(QMainWindow, QWidget):
         self.sp = QSpinBox(self)
         self.sp.setGeometry(10, 145, 100, 30)
         self.sp.setValue(1)
+        self.sp.setRange(1, 100)
         self.sp.show()
+
+        # COMPASES #
+        self.numCompases = QLabel(self)
+        self.numCompases.setText("Número de compases:")
+        self.numCompases.setGeometry(10, 180, 140, 30)
+
+        self.spCompases = QSpinBox(self)
+        self.spCompases.setGeometry(10, 205, 120, 30)
+        self.spCompases.setValue(4)
+        self.spCompases.setRange(1, 12)
+        self.spCompases.show()
+
+        # BPM #
+        self.bpmLabel = QLabel(self)
+        self.bpmLabel.setText("BPM:")
+        self.bpmLabel.setGeometry(10, 230, 140, 30)
+
+        self.bpm = QSpinBox(self)
+        self.bpm.setGeometry(10, 255, 120, 30)
+        self.bpm.setValue(120)
+        self.bpm.setRange(60, 210)
+        self.bpm.show()
 
         # KICK #
         self.numMixes = QLabel(self)
@@ -46,7 +69,6 @@ class Main(QMainWindow, QWidget):
         self.numMixes.setGeometry(140, 15, 120, 30)
 
         self.boxAudio = dragAudio.ListboxWidget(self)
-        #self.boxAudio.setPos(120, 15)
         self.boxAudio.setGeometry(140, 50, 100, 50)
         self.cajitas.append(self.boxAudio)
 
@@ -56,7 +78,6 @@ class Main(QMainWindow, QWidget):
         self.numMixes.setGeometry(260, 15, 120, 30)
 
         self.boxAudioTwo = dragAudio.ListboxWidget(self)
-        #self.boxAudioTwo.setPos(350, 15)
         self.boxAudioTwo.setGeometry(260, 50, 100, 50)
         self.cajitas.append(self.boxAudioTwo)
 
@@ -66,7 +87,6 @@ class Main(QMainWindow, QWidget):
         self.numMixes.setGeometry(380, 15, 120, 30)
 
         self.boxAudioThree = dragAudio.ListboxWidget(self)
-        #self.boxAudioThree.setPos(350, 15)
         self.boxAudioThree.setGeometry(380, 50, 100, 50)
         self.cajitas.append(self.boxAudioThree)
 
@@ -189,31 +209,31 @@ class Main(QMainWindow, QWidget):
 
     def makePatterns(self):
         cont = 1
-        #print(self.cortesAudiosFinales)
         for corte in self.cortesAudiosFinales:
             samplerate = 0
             pattern = []
             kick, snare, hihat = [], [], []
 
             for sample in corte:
-
+                numCompases = self.spCompases.value()
+                bpm = self.bpm.value()
                 if sample[0] == 'kick':
                     if self.resultadosClingo[0][0][3] == 1:
-                        kick, samplerate, long = patterns.makeKickPatternOne(sample[1], 120, 4, 44100)
+                        kick, samplerate, long = patterns.makeKickPatternOne(sample[1], bpm, numCompases, 44100)
                     elif self.resultadosClingo[0][0][3] == 2:
-                        kick, samplerate, long = patterns.makeKickPatternTwo(sample[1], 120, 4, 44100)
+                        kick, samplerate, long = patterns.makeKickPatternTwo(sample[1], bpm, numCompases, 44100)
 
                 elif sample[0] == 'snare':
                     if self.resultadosClingo[0][0][3] == 1:
-                        snare, samplerate, long = patterns.makeSnarePatternOne(sample[1], 120, 4, 44100)
+                        snare, samplerate, long = patterns.makeSnarePatternOne(sample[1], bpm, numCompases, 44100)
                     elif self.resultadosClingo[0][0][3] == 2:
-                        snare, samplerate, long = patterns.makeSnarePatternTwo(sample[1], 120, 4, 44100)
+                        snare, samplerate, long = patterns.makeSnarePatternTwo(sample[1], bpm, numCompases, 44100)
 
                 elif sample[0] == 'hihat':
                     if self.resultadosClingo[0][0][3] == 1:
-                        hihat, samplerate, long = patterns.makeHatPatternOne(sample[1], 120, 4, 44100)
+                        hihat, samplerate, long = patterns.makeHatPatternOne(sample[1], bpm, numCompases, 44100)
                     elif self.resultadosClingo[0][0][3] == 2:
-                        hihat, samplerate, long = patterns.makeHatPatternTwo(sample[1], 120, 4, 44100)
+                        hihat, samplerate, long = patterns.makeHatPatternTwo(sample[1], bpm, numCompases, 44100)
 
             for sample in range(len(kick)):
                 sampleSum = kick[sample] + snare[sample] + hihat[sample]
