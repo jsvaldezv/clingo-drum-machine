@@ -13,29 +13,52 @@ class Main(QMainWindow, QWidget):
 
     def __init__(self):
         super().__init__()
-        self.resize(480, 300)
+        self.resize(700, 300)
 
-        self.path = "none"
+        self.paths = []
+        self.cajitas = []
         self.resultadosClingo = []
         self.cortesAudiosFinales = []
 
         # LOAD AUDIOS #
         self.btnMix = QPushButton('Create', self)
-        self.btnMix.setGeometry(10, 10, 200, 50)
+        self.btnMix.setGeometry(10, 10, 100, 50)
         self.btnMix.clicked.connect(lambda: self.startCreating())
 
         self.boxAudio = dragAudio.ListboxWidget(self)
-        self.boxAudio.setPos(250, 15)
+        self.boxAudio.setPos(120, 15)
+        self.cajitas.append(self.boxAudio)
+
+        self.boxAudioTwo = dragAudio.ListboxWidget(self)
+        self.boxAudioTwo.setPos(350, 15)
+        self.cajitas.append(self.boxAudioTwo)
 
     def plotAudio(self):
-        self.path = QListWidgetItem(self.boxAudio.item(0))
+        cont = 0
+        for item in self.cajitas:
+            caja = QListWidgetItem(item.item(0))
+            if caja.text():
+                self.paths.append(caja.text())
+                track, samplerate = sf.read(self.paths[cont])
+                globals()['string%s' % + cont] = utilities.Canvas(self)
+                globals()['string%s' % + cont].plotAudio(track)
+                globals()['string%s' % + cont].setGeometry(cont+200, 80, 200, 150)
+                globals()['string%s' % + cont].show()
+                print(globals()['string%s' % + cont])
+
+            cont += 1
+
+        print(self.paths)
+
+        '''self.path = QListWidgetItem(self.boxAudio.item(0))
         if self.path.text():
             self.path = self.path.text()
             audio, samplerate = sf.read(self.path)
             self.chart = utilities.Canvas(self)
             self.chart.plotAudio(audio)
             self.chart.setGeometry(10, 80, 460, 200)
-            self.chart.show()
+            self.chart.show()'''
+
         print("-------------")
         print("Audio plotted")
         print("-------------")
@@ -43,8 +66,8 @@ class Main(QMainWindow, QWidget):
     def startCreating(self):
         self.plotAudio()
         self.getfromClingo()
-        self.soundDesign()
-        self.makePatterns()
+        #self.soundDesign()
+        #self.makePatterns()
         #self.makeAnalysis(loop, duration, samplerate)
 
     def getfromClingo(self):
