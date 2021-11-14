@@ -1,7 +1,7 @@
 % **************** Audio ****************
-sound(kick).
-sound(snare).
-sound(hihat).
+%sound(kick).
+%sound(snare).
+%sound(hihat).
 
 % **************** Envelope parameters ****************
 1 { kickAttack(1) ; kickAttack(3) ; kickAttack(5)  } 1 :- sound(kick).

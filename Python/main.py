@@ -17,6 +17,7 @@ class Main(QMainWindow, QWidget):
 
         self.paths = []
         self.cajitas = []
+        self.labels = []
         self.resultadosClingo = []
         self.cortesAudiosFinales = []
 
@@ -67,6 +68,7 @@ class Main(QMainWindow, QWidget):
         self.numMixes = QLabel(self)
         self.numMixes.setText("Kick:")
         self.numMixes.setGeometry(140, 10, 120, 30)
+        self.labels.append("kick")
 
         self.boxAudio = dragAudio.ListboxWidget(self)
         self.boxAudio.setGeometry(140, 45, 100, 50)
@@ -76,6 +78,7 @@ class Main(QMainWindow, QWidget):
         self.numMixes = QLabel(self)
         self.numMixes.setText("Snare:")
         self.numMixes.setGeometry(260, 10, 120, 30)
+        self.labels.append("snare")
 
         self.boxAudioTwo = dragAudio.ListboxWidget(self)
         self.boxAudioTwo.setGeometry(260, 45, 100, 50)
@@ -85,6 +88,7 @@ class Main(QMainWindow, QWidget):
         self.numMixes = QLabel(self)
         self.numMixes.setText("Hi-hat:")
         self.numMixes.setGeometry(380, 10, 120, 30)
+        self.labels.append("hihat")
 
         self.boxAudioThree = dragAudio.ListboxWidget(self)
         self.boxAudioThree.setGeometry(380, 45, 100, 50)
@@ -101,7 +105,9 @@ class Main(QMainWindow, QWidget):
         chart.show()
 
     def startCreating(self):
-        #self.plotAudio()
+        print("---------------------------------------------------------")
+        print("Starting...")
+        print("-------------")
         self.getfromClingo()
         self.soundDesign()
         self.makePatterns()
@@ -116,6 +122,17 @@ class Main(QMainWindow, QWidget):
 
             control.load("../Clingo/remixer.lp")
             models = []
+
+            # **** AÑADIR HECHOS A LP ***** #
+            cont = 0
+            for instrumento in self.cajitas:
+                path = QListWidgetItem(instrumento.item(0))
+                if path.text():
+                    name = self.labels[cont]
+                    fact = "sound(" + name + ")."
+                    control.add("base", [], str(fact))
+
+                cont += 1
 
             # ** GROUNDING *** #
             print("Grounding...")
@@ -169,68 +186,83 @@ class Main(QMainWindow, QWidget):
         for design in self.resultadosClingo:
             corte = []
             for instrument in design:
-                caja = self.cajitas[cont]
+
+                if instrument[0] == 'kick':
+                    caja = self.cajitas[0]
+                elif instrument[0] == 'snare':
+                    caja = self.cajitas[1]
+                else:
+                    caja = self.cajitas[2]
+
+                #caja = self.cajitas[cont]
                 path = QListWidgetItem(caja.item(0))
 
-                #if path.text():
-                # CUT
-                audio, samplerate = utilities.makeCut(path.text(), 400)
-                # ENVELOPE
-                audio = utilities.applyEnvelope(audio, samplerate, instrument[1], instrument[2])
-                # PITCH SHIFTING
-                pitch = AudioEffectsChain().pitch(shift=instrument[4])
-                audio = pitch(np.array(audio))
-                # EQ
-                audio = utilities.applyFilter(audio, instrument[0], instrument[5])
-                # WRITE
-                #name = instrument[0] + '_' + str(i)
-                #sf.write('../Results/' + name + '.wav', audio, samplerate, 'PCM_24')
+                if path.text():
+                    # CUT
+                    audio, samplerate = utilities.makeCut(path.text(), 400)
+                    # ENVELOPE
+                    audio = utilities.applyEnvelope(audio, samplerate, instrument[1], instrument[2])
+                    # PITCH SHIFTING
+                    pitch = AudioEffectsChain().pitch(shift=instrument[4])
+                    audio = pitch(np.array(audio))
+                    # EQ
+                    audio = utilities.applyFilter(audio, instrument[0], instrument[5])
+                    # WRITE
+                    #name = instrument[0] + '_' + str(i)
+                    #sf.write('../Results/' + name + '.wav', audio, samplerate, 'PCM_24')
 
-                corte.append([instrument[0], audio])
+                    corte.append([instrument[0], audio])
 
                 cont += 1
+
             cont = 0
             i += 1
             self.cortesAudiosFinales.append(corte)
 
     def makePatterns(self):
         cont = 1
-        pattern = []
         for corte in self.cortesAudiosFinales:
             samplerate = 0
-            kick, snare, hihat = [], [], []
-
+            samples = []
             for sample in corte:
+                values = 0
                 numCompases = self.spCompases.value()
                 bpm = self.bpm.value()
                 if sample[0] == 'kick':
                     if self.resultadosClingo[0][0][3] == 1:
-                        kick, samplerate, long = patterns.makeKickPatternOne(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeKickPatternOne(sample[1], bpm, numCompases, 44100)
                     elif self.resultadosClingo[0][0][3] == 2:
-                        kick, samplerate, long = patterns.makeKickPatternTwo(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeKickPatternTwo(sample[1], bpm, numCompases, 44100)
 
                 elif sample[0] == 'snare':
                     if self.resultadosClingo[0][0][3] == 1:
-                        snare, samplerate, long = patterns.makeSnarePatternOne(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeSnarePatternOne(sample[1], bpm, numCompases, 44100)
                     elif self.resultadosClingo[0][0][3] == 2:
-                        snare, samplerate, long = patterns.makeSnarePatternTwo(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeSnarePatternTwo(sample[1], bpm, numCompases, 44100)
 
                 elif sample[0] == 'hihat':
                     if self.resultadosClingo[0][0][3] == 1:
-                        hihat, samplerate, long = patterns.makeHatPatternOne(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeHatPatternOne(sample[1], bpm, numCompases, 44100)
                     elif self.resultadosClingo[0][0][3] == 2:
-                        hihat, samplerate, long = patterns.makeHatPatternTwo(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeHatPatternTwo(sample[1], bpm, numCompases, 44100)
 
-            for sample in range(len(kick)):
-                sampleSum = kick[sample] + snare[sample] + hihat[sample]
-                pattern.append(sampleSum)
+                samples.append(values)
+
+            final = []
+
+            for cero in range(len(samples[0])):
+                final.append(0)
+
+            for ins in range(len(samples)):
+                for sample in range(len(samples[0])):
+                    final[sample] += samples[ins][sample]
 
             name = 'Loop_' + str(cont)
             print(name, "creado")
-            sf.write('../Results/' + name + '.wav', pattern, samplerate, 'PCM_24')
+            sf.write('../Results/' + name + '.wav', final, samplerate, 'PCM_24')
 
             if cont == 1:
-                self.plotAudio(pattern)
+                self.plotAudio(final)
 
             cont += 1
 
