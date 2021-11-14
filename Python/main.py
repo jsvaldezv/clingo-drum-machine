@@ -36,7 +36,7 @@ class Main(QMainWindow, QWidget):
         self.numMixes.setGeometry(10, 120, 120, 30)
 
         self.sp = QSpinBox(self)
-        self.sp.setGeometry(10, 145, 100, 30)
+        self.sp.setGeometry(10, 145, 120, 30)
         self.sp.setValue(1)
         self.sp.setRange(1, 100)
         self.sp.show()
@@ -44,10 +44,10 @@ class Main(QMainWindow, QWidget):
         # COMPASES #
         self.numCompases = QLabel(self)
         self.numCompases.setText("Número de compases:")
-        self.numCompases.setGeometry(10, 180, 140, 30)
+        self.numCompases.setGeometry(10, 175, 140, 30)
 
         self.spCompases = QSpinBox(self)
-        self.spCompases.setGeometry(10, 205, 120, 30)
+        self.spCompases.setGeometry(10, 200, 120, 30)
         self.spCompases.setValue(4)
         self.spCompases.setRange(1, 12)
         self.spCompases.show()
@@ -66,54 +66,39 @@ class Main(QMainWindow, QWidget):
         # KICK #
         self.numMixes = QLabel(self)
         self.numMixes.setText("Kick:")
-        self.numMixes.setGeometry(140, 15, 120, 30)
+        self.numMixes.setGeometry(140, 10, 120, 30)
 
         self.boxAudio = dragAudio.ListboxWidget(self)
-        self.boxAudio.setGeometry(140, 50, 100, 50)
+        self.boxAudio.setGeometry(140, 45, 100, 50)
         self.cajitas.append(self.boxAudio)
 
         # SNARE #
         self.numMixes = QLabel(self)
         self.numMixes.setText("Snare:")
-        self.numMixes.setGeometry(260, 15, 120, 30)
+        self.numMixes.setGeometry(260, 10, 120, 30)
 
         self.boxAudioTwo = dragAudio.ListboxWidget(self)
-        self.boxAudioTwo.setGeometry(260, 50, 100, 50)
+        self.boxAudioTwo.setGeometry(260, 45, 100, 50)
         self.cajitas.append(self.boxAudioTwo)
 
         # HI-HAT #
         self.numMixes = QLabel(self)
         self.numMixes.setText("Hi-hat:")
-        self.numMixes.setGeometry(380, 15, 120, 30)
+        self.numMixes.setGeometry(380, 10, 120, 30)
 
         self.boxAudioThree = dragAudio.ListboxWidget(self)
-        self.boxAudioThree.setGeometry(380, 50, 100, 50)
+        self.boxAudioThree.setGeometry(380, 45, 100, 50)
         self.cajitas.append(self.boxAudioThree)
 
     def clear(self):
         for box in self.cajitas:
             box.clear()
 
-    def plotAudio(self):
-        cont = 0
-        for item in self.cajitas:
-            caja = QListWidgetItem(item.item(0))
-            if caja.text():
-                self.paths.append(caja.text())
-                track, samplerate = sf.read(self.paths[cont])
-                globals()['string%s' % + cont] = utilities.Canvas(self)
-                globals()['string%s' % + cont].plotAudio(track)
-                globals()['string%s' % + cont].setGeometry(cont+200, 80, 200, 150)
-                globals()['string%s' % + cont].show()
-                print(globals()['string%s' % + cont])
-
-            cont += 1
-
-        print(self.paths)
-
-        print("-------------")
-        print("Audio plotted")
-        print("-------------")
+    def plotAudio(self, inAudio):
+        chart = utilities.Canvas(self)
+        chart.plotAudio(inAudio)
+        chart.setGeometry(170, 110, 460, 180)
+        chart.show()
 
     def startCreating(self):
         #self.plotAudio()
@@ -180,6 +165,7 @@ class Main(QMainWindow, QWidget):
     def soundDesign(self):
         cont = 0
         i = 1
+        del self.cortesAudiosFinales[:]
         for design in self.resultadosClingo:
             corte = []
             for instrument in design:
@@ -197,8 +183,8 @@ class Main(QMainWindow, QWidget):
                 # EQ
                 audio = utilities.applyFilter(audio, instrument[0], instrument[5])
                 # WRITE
-                name = instrument[0] + '_' + str(i)
-                sf.write('../Results/' + name + '.wav', audio, samplerate, 'PCM_24')
+                #name = instrument[0] + '_' + str(i)
+                #sf.write('../Results/' + name + '.wav', audio, samplerate, 'PCM_24')
 
                 corte.append([instrument[0], audio])
 
@@ -209,9 +195,9 @@ class Main(QMainWindow, QWidget):
 
     def makePatterns(self):
         cont = 1
+        pattern = []
         for corte in self.cortesAudiosFinales:
             samplerate = 0
-            pattern = []
             kick, snare, hihat = [], [], []
 
             for sample in corte:
@@ -242,6 +228,10 @@ class Main(QMainWindow, QWidget):
             name = 'Loop_' + str(cont)
             print(name, "creado")
             sf.write('../Results/' + name + '.wav', pattern, samplerate, 'PCM_24')
+
+            if cont == 1:
+                self.plotAudio(pattern)
+
             cont += 1
 
     def makeAnalysis(self, audio, duration, samplerate):
