@@ -1,4 +1,5 @@
 import utilities
+import soundfile as sf
 
 #kick 1/4
 def makeKickPatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
@@ -50,8 +51,8 @@ def makeKickPatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
 
     #sf.write('../Results/LoopKickOne.wav', compasCompleto, inSampleRate, 'PCM_24')
 
-    print("KICK LOOP CREADO")
-    print("-----------")
+    #print("KICK LOOP CREADO")
+    #print("-----------")
 
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)  #  #kick
 
@@ -126,8 +127,8 @@ def makeKickPatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
 
     #sf.write('../Results/LoopKickTwo.wav', compasCompleto, inSampleRate, 'PCM_24')
 
-    print("KICK LOOP CREADO")
-    print("-----------")
+    #print("KICK LOOP CREADO")
+    #print("-----------")
 
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
@@ -176,8 +177,8 @@ def makeSnarePatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
 
     #sf.write('../Results/LoopSnareOne.wav', compasCompleto, inSampleRate, 'PCM_24')
 
-    print("SNARE LOOP CREADO")
-    print("-----------")
+    #print("SNARE LOOP CREADO")
+    #print("-----------")
 
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
@@ -256,8 +257,8 @@ def makeSnarePatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
 
     #sf.write('../Results/LoopSnareTwo.wav', compasCompleto, inSampleRate, 'PCM_24')
 
-    print("SNARE LOOP CREADO")
-    print("-----------")
+    #print("SNARE LOOP CREADO")
+    #print("-----------")
 
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
@@ -337,8 +338,8 @@ def makeHatPatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
 
     #sf.write('../Results/LoopHatOne.wav', compasCompleto, inSampleRate, 'PCM_24')
 
-    print("HIHAT LOOP CREADO")
-    print("-----------")
+    #print("HIHAT LOOP CREADO")
+    #print("-----------")
 
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
@@ -474,7 +475,7 @@ def makeHatPatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
 
     #sf.write('../Results/LoopHatTwo.wav', compasCompleto, inSampleRate, 'PCM_24')
 
-    print("HIHAT LOOP CREADO")
-    print("-----------")
+    #print("HIHAT LOOP CREADO")
+    #print("-----------")
 
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)

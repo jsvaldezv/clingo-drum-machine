@@ -98,11 +98,12 @@ class Main(QMainWindow, QWidget):
     def startCreating(self):
         #self.plotAudio()
         self.getfromClingo()
-        #self.soundDesign()
-        #self.makePatterns()
+        self.soundDesign()
+        self.makePatterns()
         #self.makeAnalysis(loop, duration, samplerate)
 
     def getfromClingo(self):
+        del self.resultadosClingo[:]
         # ** CONFIGURAR Y CARGAR CLINGO *** #
         control = clingo.Control(utilities.clingo_args)
         if self.sp.value() != 0:
@@ -155,15 +156,19 @@ class Main(QMainWindow, QWidget):
             dialog.setText("No puedes pedir 0 propuestas")
             dialog.setIcon(QMessageBox.Critical)
             dialog.exec_()
-        
-    def soundDesign(self):
 
-        cont = 1
+    def soundDesign(self):
+        cont = 0
+        i = 1
         for design in self.resultadosClingo:
             corte = []
             for instrument in design:
+                caja = self.cajitas[cont]
+                path = QListWidgetItem(caja.item(0))
+
+                #if path.text():
                 # CUT
-                audio, samplerate = utilities.makeCut(self.path, 400)
+                audio, samplerate = utilities.makeCut(path.text(), 400)
                 # ENVELOPE
                 audio = utilities.applyEnvelope(audio, samplerate, instrument[1], instrument[2])
                 # PITCH SHIFTING
@@ -172,16 +177,19 @@ class Main(QMainWindow, QWidget):
                 # EQ
                 audio = utilities.applyFilter(audio, instrument[0], instrument[5])
                 # WRITE
-                name = instrument[0] + '_' + str(cont)
+                name = instrument[0] + '_' + str(i)
                 sf.write('../Results/' + name + '.wav', audio, samplerate, 'PCM_24')
 
                 corte.append([instrument[0], audio])
 
+                cont += 1
+            cont = 0
+            i += 1
             self.cortesAudiosFinales.append(corte)
-            cont += 1
 
     def makePatterns(self):
         cont = 1
+        #print(self.cortesAudiosFinales)
         for corte in self.cortesAudiosFinales:
             samplerate = 0
             pattern = []
@@ -212,6 +220,7 @@ class Main(QMainWindow, QWidget):
                 pattern.append(sampleSum)
 
             name = 'Loop_' + str(cont)
+            print(name, "creado")
             sf.write('../Results/' + name + '.wav', pattern, samplerate, 'PCM_24')
             cont += 1
 
