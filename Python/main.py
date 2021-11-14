@@ -25,13 +25,54 @@ class Main(QMainWindow, QWidget):
         self.btnMix.setGeometry(10, 10, 100, 50)
         self.btnMix.clicked.connect(lambda: self.startCreating())
 
+        # DELETE AUDIOS #
+        self.btnMix = QPushButton('Delete', self)
+        self.btnMix.setGeometry(10, 65, 100, 50)
+        self.btnMix.clicked.connect(lambda: self.clear())
+
+        # LOOPS #
+        self.numMixes = QLabel(self)
+        self.numMixes.setText("Número de loops:")
+        self.numMixes.setGeometry(10, 120, 120, 30)
+
+        self.sp = QSpinBox(self)
+        self.sp.setGeometry(10, 145, 100, 30)
+        self.sp.setValue(1)
+        self.sp.show()
+
+        # KICK #
+        self.numMixes = QLabel(self)
+        self.numMixes.setText("Kick:")
+        self.numMixes.setGeometry(140, 15, 120, 30)
+
         self.boxAudio = dragAudio.ListboxWidget(self)
-        self.boxAudio.setPos(120, 15)
+        #self.boxAudio.setPos(120, 15)
+        self.boxAudio.setGeometry(140, 50, 100, 50)
         self.cajitas.append(self.boxAudio)
 
+        # SNARE #
+        self.numMixes = QLabel(self)
+        self.numMixes.setText("Snare:")
+        self.numMixes.setGeometry(260, 15, 120, 30)
+
         self.boxAudioTwo = dragAudio.ListboxWidget(self)
-        self.boxAudioTwo.setPos(350, 15)
+        #self.boxAudioTwo.setPos(350, 15)
+        self.boxAudioTwo.setGeometry(260, 50, 100, 50)
         self.cajitas.append(self.boxAudioTwo)
+
+        # HI-HAT #
+        self.numMixes = QLabel(self)
+        self.numMixes.setText("Hi-hat:")
+        self.numMixes.setGeometry(380, 15, 120, 30)
+
+        self.boxAudioThree = dragAudio.ListboxWidget(self)
+        #self.boxAudioThree.setPos(350, 15)
+        self.boxAudioThree.setGeometry(380, 50, 100, 50)
+        self.cajitas.append(self.boxAudioThree)
+
+    def clear(self):
+        for box in self.cajitas:
+            box.clear()
 
     def plotAudio(self):
         cont = 0
@@ -50,21 +91,12 @@ class Main(QMainWindow, QWidget):
 
         print(self.paths)
 
-        '''self.path = QListWidgetItem(self.boxAudio.item(0))
-        if self.path.text():
-            self.path = self.path.text()
-            audio, samplerate = sf.read(self.path)
-            self.chart = utilities.Canvas(self)
-            self.chart.plotAudio(audio)
-            self.chart.setGeometry(10, 80, 460, 200)
-            self.chart.show()'''
-
         print("-------------")
         print("Audio plotted")
         print("-------------")
 
     def startCreating(self):
-        self.plotAudio()
+        #self.plotAudio()
         self.getfromClingo()
         #self.soundDesign()
         #self.makePatterns()
@@ -73,46 +105,57 @@ class Main(QMainWindow, QWidget):
     def getfromClingo(self):
         # ** CONFIGURAR Y CARGAR CLINGO *** #
         control = clingo.Control(utilities.clingo_args)
-        control.configuration.solve.models = 1
-        control.load("../Clingo/remixer.lp")
-        models = []
+        if self.sp.value() != 0:
+            control.configuration.solve.models = self.sp.value()
 
-        # ** GROUNDING *** #
-        print("Grounding...")
-        control.ground([("base", [])])
-        print("-------------")
+            control.load("../Clingo/remixer.lp")
+            models = []
 
-        # ** SOLVE *** #
-        print("Solving...")
-        with control.solve(yield_=True) as solve_handle:
-            for model in solve_handle:
-                models.append(model.symbols(shown=True))
-        print("-------------")
+            # ** GROUNDING *** #
+            print("Grounding...")
+            control.ground([("base", [])])
+            print("-------------")
 
-        cont = 0
-        for model in models:
-            resp = []
-            print("Propuesta ", cont + 1)
-            for atom in model:
-                instrument = str(atom.arguments[0])
-                attack = int(str(atom.arguments[1]))
-                release = int(str(atom.arguments[2]))
-                pattern = int(str(atom.arguments[3]))
-                pitchShift = int(str(atom.arguments[4]))
-                eq = int(str(atom.arguments[5]))
-                result = []
-                result.append(instrument)
-                result.append(attack)
-                result.append(release)
-                result.append(pattern)
-                result.append(pitchShift)
-                result.append(eq)
-                resp.append(result)
-                print("Para", instrument, "aplicar:", attack, "de attack,", release, "de release,", pitchShift, "de pitch shift y", eq, "de EQ en el patrón", pattern)
-            self.resultadosClingo.append(resp)
-            cont += 1
-        print("-------------")
+            # ** SOLVE *** #
+            print("Solving...")
+            with control.solve(yield_=True) as solve_handle:
+                for model in solve_handle:
+                    models.append(model.symbols(shown=True))
+            print("-------------")
 
+            cont = 0
+            for model in models:
+                resp = []
+                print("Propuesta ", cont + 1)
+                for atom in model:
+                    instrument = str(atom.arguments[0])
+                    attack = int(str(atom.arguments[1]))
+                    release = int(str(atom.arguments[2]))
+                    pattern = int(str(atom.arguments[3]))
+                    pitchShift = int(str(atom.arguments[4]))
+                    eq = int(str(atom.arguments[5]))
+                    result = []
+                    result.append(instrument)
+                    result.append(attack)
+                    result.append(release)
+                    result.append(pattern)
+                    result.append(pitchShift)
+                    result.append(eq)
+                    resp.append(result)
+                    print("Para", instrument, "aplicar:", attack, "de attack,", release, "de release,", pitchShift,
+                          "de pitch shift y", eq, "de EQ en el patrón", pattern)
+                self.resultadosClingo.append(resp)
+                cont += 1
+                print("")
+            print("-------------")
+
+        else:
+            dialog = QMessageBox()
+            dialog.setWindowTitle("Error")
+            dialog.setText("No puedes pedir 0 propuestas")
+            dialog.setIcon(QMessageBox.Critical)
+            dialog.exec_()
+        
     def soundDesign(self):
 
         cont = 1
