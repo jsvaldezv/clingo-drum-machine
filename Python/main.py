@@ -170,7 +170,7 @@ class Main(QMainWindow, QWidget):
             for model in models:
                 resp = []
                 print("Propuesta ", cont + 1)
-                self.printText("Propuesta " + str(cont + 1))
+                self.printText("Propuesta ".upper() + str(cont + 1))
                 for atom in model:
                     instrument = str(atom.arguments[0])
                     attack = int(str(atom.arguments[1]))
@@ -190,9 +190,10 @@ class Main(QMainWindow, QWidget):
                     print("Para", instrument, "aplicar:", attack, "de attack,", release, "de release,", pitchShift,
                           "de pitch shift y", eq, "de EQ en el patrón", pattern)
 
-                    self.printText("Para " + str(instrument) + " aplicar: " + str(attack) + " de attack, " + str(release) +
+                    self.printText("Para " + str(instrument.upper()) + " aplicar: " + str(attack) + " de attack, " + str(release) +
                                     " de release, " + str(pitchShift) + " de pitch shift y " + str(eq) + " de EQ en el patrón "
                                     + str(pattern) + ".")
+                    self.printText("")
 
                 self.resultadosClingo.append(resp)
                 cont += 1
