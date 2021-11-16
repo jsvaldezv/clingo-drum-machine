@@ -21,7 +21,7 @@ class Main(QMainWindow, QWidget):
         self.labels = []
         self.resultadosClingo = []
         self.cortesAudiosFinales = []
-        self.pathPlay = "None"
+        self.objetosCheckboxes = []
 
         # LOAD AUDIOS #
         self.btnMix = QPushButton('Create', self)
@@ -36,7 +36,7 @@ class Main(QMainWindow, QWidget):
         # PLAY AUDIOS #
         self.play = QPushButton('Play', self)
         self.play.setGeometry(10, 120, 100, 50)
-        self.play.clicked.connect(lambda: self.playSound(self.pathPlay))
+        self.play.clicked.connect(lambda: self.playSound())
 
         # LOOPS #
         self.numMixes = QLabel(self)
@@ -264,13 +264,10 @@ class Main(QMainWindow, QWidget):
                 if sample[0] == 'kick':
                     if self.resultadosClingo[contCortes][0][3] == 1:
                         values, samplerate, long = patterns.makeKickPatternOne(sample[1], bpm, numCompases, 44100)
-                        print("Entre al 1")
                     elif self.resultadosClingo[contCortes][0][3] == 2:
                         values, samplerate, long = patterns.makeKickPatternTwo(sample[1], bpm, numCompases, 44100)
-                        print("Entre al 2")
                     elif self.resultadosClingo[contCortes][0][3] == 3:
                         values, samplerate, long = patterns.makeKickPatternDNB(sample[1], bpm, numCompases, 44100)
-                        print("Entre al 3")
 
                 elif sample[0] == 'snare':
                     if self.resultadosClingo[contCortes][0][3] == 1:
@@ -304,8 +301,8 @@ class Main(QMainWindow, QWidget):
             print(name, "creado")
             sf.write('../Results/' + name + '.wav', final, samplerate, 'PCM_24')
 
-            if cont == 1:
-                self.plotAudio(final)
+            #if cont == 1:
+            #    self.plotAudio(final)
 
             cont += 1
 
@@ -319,10 +316,17 @@ class Main(QMainWindow, QWidget):
         peak = frequency[peakIndex]
         print("Centroid:", centroid, ", Spread:", spread, ", Peak:", peak)
 
-    def playSound(self, inPath):
-        print("Playing...")
-        #playsound.playsound("../Results/Loop_1.wav")
-        playsound.playsound(inPath)
+    def playSound(self):
+        cont = 0
+        for check in self.objetosCheckboxes:
+            if check.isChecked() == True:
+                print("Playing...")
+                path = "../Results/Loop_" + str(cont+1) + ".wav"
+                audio, sr = sf.read(path)
+                self.plotAudio(audio)
+                playsound.playsound(path)
+
+            cont += 1
         print("-------------")
 
     def printText(self, inText):
@@ -333,10 +337,18 @@ class Main(QMainWindow, QWidget):
     def createCheckBoxes(self):
         yInitChecBox = 0
         yInitLabel = 0
+
+        for check in range(len(self.objetosCheckboxes)):
+            globals()[f"checkBox_{check}"].hide()
+            globals()[f"checkBoxLabel_{check}"].hide()
+
+        del self.objetosCheckboxes[:]
+
         for check in range(len(self.resultadosClingo)):
             globals()[f"checkBox_{check}"] = QCheckBox(self)
             globals()[f"checkBox_{check}"].setGeometry(780, yInitChecBox, 100, 50)
             globals()[f"checkBox_{check}"].show()
+            self.objetosCheckboxes.append(globals()[f"checkBox_{check}"])
 
             globals()[f"checkBoxLabel_{check}"] = QLabel(self)
             globals()[f"checkBoxLabel_{check}"].setGeometry(800, yInitLabel, 100, 50)
