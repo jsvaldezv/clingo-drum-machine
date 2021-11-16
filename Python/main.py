@@ -9,6 +9,7 @@ from scipy.fft import rfft, rfftfreq
 import numpy as np
 import playsound
 from pysndfx import AudioEffectsChain
+import time
 
 class Main(QMainWindow, QWidget):
 
@@ -325,6 +326,12 @@ class Main(QMainWindow, QWidget):
                 audio, sr = sf.read(path)
                 self.plotAudio(audio)
                 playsound.playsound(path)
+
+                '''import threading
+                thread = threading.Thread(target=self.plotAudio(audio))
+                thread.start()
+                thread.join()
+                playsound.playsound(path)'''
 
             cont += 1
         print("-------------")
