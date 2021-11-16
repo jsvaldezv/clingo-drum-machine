@@ -14,7 +14,7 @@ class Main(QMainWindow, QWidget):
 
     def __init__(self):
         super().__init__()
-        self.resize(800, 400)
+        self.resize(1000, 400)
 
         self.paths = []
         self.cajitas = []
@@ -127,6 +127,7 @@ class Main(QMainWindow, QWidget):
         self.getfromClingo()
         self.soundDesign()
         self.makePatterns()
+        self.createCheckBoxes()
         #self.makeAnalysis(loop, duration, samplerate)
 
     def getfromClingo(self):
@@ -252,7 +253,6 @@ class Main(QMainWindow, QWidget):
     def makePatterns(self):
         cont = 1
         contCortes = 0
-        print(self.resultadosClingo)
         for corte in self.cortesAudiosFinales:
             samplerate = 0
             samples = []
@@ -321,15 +321,30 @@ class Main(QMainWindow, QWidget):
 
     def playSound(self, inPath):
         print("Playing...")
-        # playsound.playsound("/Users/jsvaldezv/Documents/Programming/GitHub/SmartBuilder/audios/guitar.wav")
-        #playsound.playsound(inPath)
-
+        #playsound.playsound("../Results/Loop_1.wav")
+        playsound.playsound(inPath)
         print("-------------")
 
     def printText(self, inText):
         cursor = self.textEdit.textCursor()
         cursor.atEnd()
         cursor.insertText(inText + "\n")
+
+    def createCheckBoxes(self):
+        yInitChecBox = 0
+        yInitLabel = 0
+        for check in range(len(self.resultadosClingo)):
+            globals()[f"checkBox_{check}"] = QCheckBox(self)
+            globals()[f"checkBox_{check}"].setGeometry(780, yInitChecBox, 100, 50)
+            globals()[f"checkBox_{check}"].show()
+
+            globals()[f"checkBoxLabel_{check}"] = QLabel(self)
+            globals()[f"checkBoxLabel_{check}"].setGeometry(800, yInitLabel, 100, 50)
+            globals()[f"checkBoxLabel_{check}"].setText("Loop "+str(check+1))
+            globals()[f"checkBoxLabel_{check}"].show()
+
+            yInitChecBox += 30
+            yInitLabel += 30
 
 
 app = QApplication(sys.argv)
