@@ -233,18 +233,24 @@ class Main(QMainWindow, QWidget):
                         values, samplerate, long = patterns.makeKickPatternOne(sample[1], bpm, numCompases, 44100)
                     elif self.resultadosClingo[0][0][3] == 2:
                         values, samplerate, long = patterns.makeKickPatternTwo(sample[1], bpm, numCompases, 44100)
+                    elif self.resultadosClingo[0][0][3] == 3:
+                        values, samplerate, long = patterns.makeKickPatternDNB(sample[1], bpm, numCompases, 44100)
 
                 elif sample[0] == 'snare':
                     if self.resultadosClingo[0][0][3] == 1:
                         values, samplerate, long = patterns.makeSnarePatternOne(sample[1], bpm, numCompases, 44100)
                     elif self.resultadosClingo[0][0][3] == 2:
                         values, samplerate, long = patterns.makeSnarePatternTwo(sample[1], bpm, numCompases, 44100)
+                    elif self.resultadosClingo[0][0][3] == 3:
+                        values, samplerate, long = patterns.makeSnareDembow(sample[1], bpm, numCompases, 44100)
 
                 elif sample[0] == 'hihat':
                     if self.resultadosClingo[0][0][3] == 1:
                         values, samplerate, long = patterns.makeHatPatternOne(sample[1], bpm, numCompases, 44100)
                     elif self.resultadosClingo[0][0][3] == 2:
                         values, samplerate, long = patterns.makeHatPatternTwo(sample[1], bpm, numCompases, 44100)
+                    elif self.resultadosClingo[0][0][3] == 3:
+                        values, samplerate, long = patterns.makeHatPatternThree(sample[1], bpm, numCompases, 44100)
 
                 samples.append(values)
 

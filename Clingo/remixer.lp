@@ -23,9 +23,9 @@ release(hihat,R) :- hihatRel(R).
 envelope(N,A,R):- attack(N,A),release(N,R).
 
 % **************** Rhythms ****************
-1 { rKick(1; 2) } 1 :- sound(kick).
-1 { rSnare(1; 2) } 1 :- sound(snare).
-1 { rHihat(1; 2) } 1 :- sound(hihat).
+1 { rKick(1; 2; 3) } 1 :- sound(kick).
+1 { rSnare(1; 2; 3) } 1 :- sound(snare).
+1 { rHihat(1; 2; 3) } 1 :- sound(hihat).
 
 rhythm(kick,R) :- rKick(R).
 rhythm(snare,R) :- rSnare(R).
