@@ -186,8 +186,10 @@ class Main(QMainWindow, QWidget):
                     result.append(pitchShift)
                     result.append(eq)
                     resp.append(result)
+
                     print("Para", instrument, "aplicar:", attack, "de attack,", release, "de release,", pitchShift,
                           "de pitch shift y", eq, "de EQ en el patrón", pattern)
+
                     self.printText("Para " + str(instrument) + " aplicar: " + str(attack) + " de attack, " + str(release) +
                                     " de release, " + str(pitchShift) + " de pitch shift y " + str(eq) + " de EQ en el patrón "
                                     + str(pattern) + ".")
@@ -248,38 +250,45 @@ class Main(QMainWindow, QWidget):
 
     def makePatterns(self):
         cont = 1
+        contCortes = 0
+        print(self.resultadosClingo)
         for corte in self.cortesAudiosFinales:
             samplerate = 0
             samples = []
+
             for sample in corte:
                 values = 0
                 numCompases = self.spCompases.value()
                 bpm = self.bpm.value()
                 if sample[0] == 'kick':
-                    if self.resultadosClingo[0][0][3] == 1:
+                    if self.resultadosClingo[contCortes][0][3] == 1:
                         values, samplerate, long = patterns.makeKickPatternOne(sample[1], bpm, numCompases, 44100)
-                    elif self.resultadosClingo[0][0][3] == 2:
+                        print("Entre al 1")
+                    elif self.resultadosClingo[contCortes][0][3] == 2:
                         values, samplerate, long = patterns.makeKickPatternTwo(sample[1], bpm, numCompases, 44100)
-                    elif self.resultadosClingo[0][0][3] == 3:
+                        print("Entre al 2")
+                    elif self.resultadosClingo[contCortes][0][3] == 3:
                         values, samplerate, long = patterns.makeKickPatternDNB(sample[1], bpm, numCompases, 44100)
+                        print("Entre al 3")
 
                 elif sample[0] == 'snare':
-                    if self.resultadosClingo[0][0][3] == 1:
+                    if self.resultadosClingo[contCortes][0][3] == 1:
                         values, samplerate, long = patterns.makeSnarePatternOne(sample[1], bpm, numCompases, 44100)
-                    elif self.resultadosClingo[0][0][3] == 2:
+                    elif self.resultadosClingo[contCortes][0][3] == 2:
                         values, samplerate, long = patterns.makeSnarePatternTwo(sample[1], bpm, numCompases, 44100)
-                    elif self.resultadosClingo[0][0][3] == 3:
+                    elif self.resultadosClingo[contCortes][0][3] == 3:
                         values, samplerate, long = patterns.makeSnareDembow(sample[1], bpm, numCompases, 44100)
 
                 elif sample[0] == 'hihat':
-                    if self.resultadosClingo[0][0][3] == 1:
+                    if self.resultadosClingo[contCortes][0][3] == 1:
                         values, samplerate, long = patterns.makeHatPatternOne(sample[1], bpm, numCompases, 44100)
-                    elif self.resultadosClingo[0][0][3] == 2:
+                    elif self.resultadosClingo[contCortes][0][3] == 2:
                         values, samplerate, long = patterns.makeHatPatternTwo(sample[1], bpm, numCompases, 44100)
-                    elif self.resultadosClingo[0][0][3] == 3:
+                    elif self.resultadosClingo[contCortes][0][3] == 3:
                         values, samplerate, long = patterns.makeHatPatternThree(sample[1], bpm, numCompases, 44100)
 
                 samples.append(values)
+            contCortes += 1
 
             final = []
 
