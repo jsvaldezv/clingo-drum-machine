@@ -7,19 +7,21 @@ import soundfile as sf
 import clingo
 from scipy.fft import rfft, rfftfreq
 import numpy as np
+import playsound
 from pysndfx import AudioEffectsChain
 
 class Main(QMainWindow, QWidget):
 
     def __init__(self):
         super().__init__()
-        self.resize(700, 300)
+        self.resize(800, 400)
 
         self.paths = []
         self.cajitas = []
         self.labels = []
         self.resultadosClingo = []
         self.cortesAudiosFinales = []
+        self.pathPlay = "None"
 
         # LOAD AUDIOS #
         self.btnMix = QPushButton('Create', self)
@@ -31,24 +33,29 @@ class Main(QMainWindow, QWidget):
         self.btnMix.setGeometry(10, 65, 100, 50)
         self.btnMix.clicked.connect(lambda: self.clear())
 
+        # PLAY AUDIOS #
+        self.play = QPushButton('Play', self)
+        self.play.setGeometry(10, 120, 100, 50)
+        self.play.clicked.connect(lambda: self.playSound(self.pathPlay))
+
         # LOOPS #
         self.numMixes = QLabel(self)
-        self.numMixes.setText("Número de loops:")
-        self.numMixes.setGeometry(10, 120, 120, 30)
+        self.numMixes.setText("Loops:")
+        self.numMixes.setGeometry(15, 170, 120, 30)
 
         self.sp = QSpinBox(self)
-        self.sp.setGeometry(10, 145, 120, 30)
+        self.sp.setGeometry(15, 195, 110, 30)
         self.sp.setValue(1)
         self.sp.setRange(1, 100)
         self.sp.show()
 
         # COMPASES #
         self.numCompases = QLabel(self)
-        self.numCompases.setText("Número de compases:")
-        self.numCompases.setGeometry(10, 175, 140, 30)
+        self.numCompases.setText("Compases:")
+        self.numCompases.setGeometry(15, 225, 140, 30)
 
         self.spCompases = QSpinBox(self)
-        self.spCompases.setGeometry(10, 200, 120, 30)
+        self.spCompases.setGeometry(15, 250, 110, 30)
         self.spCompases.setValue(4)
         self.spCompases.setRange(1, 12)
         self.spCompases.show()
@@ -56,10 +63,10 @@ class Main(QMainWindow, QWidget):
         # BPM #
         self.bpmLabel = QLabel(self)
         self.bpmLabel.setText("BPM:")
-        self.bpmLabel.setGeometry(10, 230, 140, 30)
+        self.bpmLabel.setGeometry(15, 280, 140, 30)
 
         self.bpm = QSpinBox(self)
-        self.bpm.setGeometry(10, 255, 120, 30)
+        self.bpm.setGeometry(15, 305, 110, 30)
         self.bpm.setValue(120)
         self.bpm.setRange(60, 210)
         self.bpm.show()
@@ -94,6 +101,10 @@ class Main(QMainWindow, QWidget):
         self.boxAudioThree.setGeometry(380, 45, 100, 50)
         self.cajitas.append(self.boxAudioThree)
 
+        # TEXT BUTTON #
+        self.textEdit = QTextEdit(self)
+        self.textEdit.setGeometry(500, 20, 250, 320)
+
     def clear(self):
         for box in self.cajitas:
             box.clear()
@@ -101,13 +112,18 @@ class Main(QMainWindow, QWidget):
     def plotAudio(self, inAudio):
         chart = utilities.Canvas(self)
         chart.plotAudio(inAudio)
-        chart.setGeometry(170, 110, 460, 180)
+        chart.setGeometry(140, 110, 340, 180)
         chart.show()
 
     def startCreating(self):
         print("---------------------------------------------------------")
         print("Starting...")
         print("-------------")
+        self.textEdit.clear()
+        self.printText("-------------")
+        self.printText("Starting...")
+        self.printText("-------------")
+
         self.getfromClingo()
         self.soundDesign()
         self.makePatterns()
@@ -136,20 +152,25 @@ class Main(QMainWindow, QWidget):
 
             # ** GROUNDING *** #
             print("Grounding...")
+            self.printText("Grounding...")
             control.ground([("base", [])])
             print("-------------")
+            self.printText("-------------")
 
             # ** SOLVE *** #
             print("Solving...")
+            self.printText("Solving...")
             with control.solve(yield_=True) as solve_handle:
                 for model in solve_handle:
                     models.append(model.symbols(shown=True))
             print("-------------")
+            self.printText("-------------")
 
             cont = 0
             for model in models:
                 resp = []
                 print("Propuesta ", cont + 1)
+                self.printText("Propuesta " + str(cont + 1))
                 for atom in model:
                     instrument = str(atom.arguments[0])
                     attack = int(str(atom.arguments[1]))
@@ -167,10 +188,16 @@ class Main(QMainWindow, QWidget):
                     resp.append(result)
                     print("Para", instrument, "aplicar:", attack, "de attack,", release, "de release,", pitchShift,
                           "de pitch shift y", eq, "de EQ en el patrón", pattern)
+                    self.printText("Para " + str(instrument) + " aplicar: " + str(attack) + " de attack, " + str(release) +
+                                    " de release, " + str(pitchShift) + " de pitch shift y " + str(eq) + " de EQ en el patrón "
+                                    + str(pattern) + ".")
+
                 self.resultadosClingo.append(resp)
                 cont += 1
                 print("")
+                self.printText("")
             print("-------------")
+            self.printText("-------------")
 
         else:
             dialog = QMessageBox()
@@ -281,6 +308,18 @@ class Main(QMainWindow, QWidget):
         peakIndex = np.argmax(np.array(amplitude))
         peak = frequency[peakIndex]
         print("Centroid:", centroid, ", Spread:", spread, ", Peak:", peak)
+
+    def playSound(self, inPath):
+        print("Playing...")
+        # playsound.playsound("/Users/jsvaldezv/Documents/Programming/GitHub/SmartBuilder/audios/guitar.wav")
+        #playsound.playsound(inPath)
+
+        print("-------------")
+
+    def printText(self, inText):
+        cursor = self.textEdit.textCursor()
+        cursor.atEnd()
+        cursor.insertText(inText + "\n")
 
 
 app = QApplication(sys.argv)

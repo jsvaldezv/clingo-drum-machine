@@ -132,7 +132,7 @@ def makeKickPatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
 
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
-#hat 1/16
+#kick 1/16
 def makeKickPatternDNB(inAudio, inBPM, inNumCompas,inSampleRate):
 
     # Simple sixteenth note [1/16] pattern
