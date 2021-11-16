@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 import dragAudio
 import utilities
 import patterns
@@ -9,13 +10,12 @@ from scipy.fft import rfft, rfftfreq
 import numpy as np
 import playsound
 from pysndfx import AudioEffectsChain
-import time
 
 class Main(QMainWindow, QWidget):
 
     def __init__(self):
         super().__init__()
-        self.resize(1000, 400)
+        self.resize(1000, 450)
 
         self.paths = []
         self.cajitas = []
@@ -24,28 +24,34 @@ class Main(QMainWindow, QWidget):
         self.cortesAudiosFinales = []
         self.objetosCheckboxes = []
 
+        # TITLE #
+        self.mainLabel = QLabel(self)
+        self.mainLabel.setText("SMART BUILDER")
+        self.mainLabel.setFont(QFont('Arial', 30))
+        self.mainLabel.setGeometry(int(1000/2 - 120), 0, 245, 50)
+
         # LOAD AUDIOS #
         self.btnMix = QPushButton('Create', self)
-        self.btnMix.setGeometry(10, 10, 100, 50)
+        self.btnMix.setGeometry(10, 40, 100, 50)
         self.btnMix.clicked.connect(lambda: self.startCreating())
 
         # DELETE AUDIOS #
         self.btnMix = QPushButton('Delete', self)
-        self.btnMix.setGeometry(10, 65, 100, 50)
+        self.btnMix.setGeometry(10, 95, 100, 50)
         self.btnMix.clicked.connect(lambda: self.clear())
 
         # PLAY AUDIOS #
         self.play = QPushButton('Play', self)
-        self.play.setGeometry(10, 120, 100, 50)
+        self.play.setGeometry(10, 150, 100, 50)
         self.play.clicked.connect(lambda: self.playSound())
 
         # LOOPS #
         self.numMixes = QLabel(self)
         self.numMixes.setText("Loops:")
-        self.numMixes.setGeometry(15, 170, 120, 30)
+        self.numMixes.setGeometry(15, 200, 120, 30)
 
         self.sp = QSpinBox(self)
-        self.sp.setGeometry(15, 195, 110, 30)
+        self.sp.setGeometry(15, 225, 110, 30)
         self.sp.setValue(1)
         self.sp.setRange(1, 100)
         self.sp.show()
@@ -53,10 +59,10 @@ class Main(QMainWindow, QWidget):
         # COMPASES #
         self.numCompases = QLabel(self)
         self.numCompases.setText("Compases:")
-        self.numCompases.setGeometry(15, 225, 140, 30)
+        self.numCompases.setGeometry(15, 255, 140, 30)
 
         self.spCompases = QSpinBox(self)
-        self.spCompases.setGeometry(15, 250, 110, 30)
+        self.spCompases.setGeometry(15, 280, 110, 30)
         self.spCompases.setValue(4)
         self.spCompases.setRange(1, 12)
         self.spCompases.show()
@@ -64,10 +70,10 @@ class Main(QMainWindow, QWidget):
         # BPM #
         self.bpmLabel = QLabel(self)
         self.bpmLabel.setText("BPM:")
-        self.bpmLabel.setGeometry(15, 280, 140, 30)
+        self.bpmLabel.setGeometry(15, 310, 140, 30)
 
         self.bpm = QSpinBox(self)
-        self.bpm.setGeometry(15, 305, 110, 30)
+        self.bpm.setGeometry(15, 335, 110, 30)
         self.bpm.setValue(120)
         self.bpm.setRange(60, 210)
         self.bpm.show()
@@ -75,36 +81,36 @@ class Main(QMainWindow, QWidget):
         # KICK #
         self.numMixes = QLabel(self)
         self.numMixes.setText("Kick:")
-        self.numMixes.setGeometry(140, 10, 120, 30)
+        self.numMixes.setGeometry(140, 40, 120, 30)
         self.labels.append("kick")
 
         self.boxAudio = dragAudio.ListboxWidget(self)
-        self.boxAudio.setGeometry(140, 45, 100, 50)
+        self.boxAudio.setGeometry(140, 75, 100, 50)
         self.cajitas.append(self.boxAudio)
 
         # SNARE #
         self.numMixes = QLabel(self)
         self.numMixes.setText("Snare:")
-        self.numMixes.setGeometry(260, 10, 120, 30)
+        self.numMixes.setGeometry(260, 40, 120, 30)
         self.labels.append("snare")
 
         self.boxAudioTwo = dragAudio.ListboxWidget(self)
-        self.boxAudioTwo.setGeometry(260, 45, 100, 50)
+        self.boxAudioTwo.setGeometry(260, 75, 100, 50)
         self.cajitas.append(self.boxAudioTwo)
 
         # HI-HAT #
         self.numMixes = QLabel(self)
         self.numMixes.setText("Hi-hat:")
-        self.numMixes.setGeometry(380, 10, 120, 30)
+        self.numMixes.setGeometry(380, 40, 120, 30)
         self.labels.append("hihat")
 
         self.boxAudioThree = dragAudio.ListboxWidget(self)
-        self.boxAudioThree.setGeometry(380, 45, 100, 50)
+        self.boxAudioThree.setGeometry(380, 75, 100, 50)
         self.cajitas.append(self.boxAudioThree)
 
         # TEXT BUTTON #
         self.textEdit = QTextEdit(self)
-        self.textEdit.setGeometry(500, 20, 250, 320)
+        self.textEdit.setGeometry(500, 50, 250, 320)
 
     def clear(self):
         for box in self.cajitas:
@@ -113,7 +119,7 @@ class Main(QMainWindow, QWidget):
     def plotAudio(self, inAudio):
         chart = utilities.Canvas(self)
         chart.plotAudio(inAudio)
-        chart.setGeometry(140, 110, 340, 180)
+        chart.setGeometry(140, 150, 340, 180)
         chart.show()
 
     def startCreating(self):
@@ -192,17 +198,21 @@ class Main(QMainWindow, QWidget):
                     print("Para", instrument, "aplicar:", attack, "de attack,", release, "de release,", pitchShift,
                           "de pitch shift y", eq, "de EQ en el patrón", pattern)
 
-                    self.printText("Para " + str(instrument.upper()) + " aplicar: " + str(attack) + " de attack, " + str(release) +
-                                    " de release, " + str(pitchShift) + " de pitch shift y " + str(eq) + " de EQ en el patrón "
-                                    + str(pattern) + ".")
-                    self.printText("")
+                    self.printText(str(instrument.upper() + "..."))
+                    self.printText("• Patrón " + str(pattern))
+                    self.printText("• " + str(attack) + " de attack")
+                    self.printText("• " + str(release) + " de release")
+                    self.printText("• " + str(pitchShift) + " de pitch shifting")
+                    self.printText("• " + str(eq) + " de EQ")
 
+                    self.printText("")
                 self.resultadosClingo.append(resp)
                 cont += 1
                 print("")
+                self.printText("-------------")
                 self.printText("")
             print("-------------")
-            self.printText("-------------")
+            #self.printText("-------------")
 
         else:
             dialog = QMessageBox()
