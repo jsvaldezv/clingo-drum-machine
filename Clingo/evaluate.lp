@@ -5,9 +5,32 @@ sound(kick,1,900,500,300).
 sound(kick,2,800,520,301).
 sound(kick,3,700,530,302).
 sound(kick,4,950,600,320).
-sound(kick,5,900,400,301).
+sound(kick,5,910,400,301).
 
-% sumKick(S,N) :- S = X + Y + Z, sound(kick,N,X,Y,Z).
-#minimize { S : sound(kick,_,X,Y,Z), S = X + Y + Z }.
+sound(hihat,1,10000,7000,12000).
+sound(hihat,2,8000,7500,11002).
+sound(hihat,3,9000,8000,12502).
+sound(hihat,4,9500,8500,15005).
+sound(hihat,5,9100,9000,14007).
 
-#show sumKick/2.
+sound(snare,1, 4000).
+sound(snare,2, 3000).
+sound(snare,3, 2000).
+sound(snare,4, 1000).
+sound(snare,5, 6000).
+
+sumKick(N, S) :- sound(kick, N, X, Y, Z), S = X+Y+Z.
+1 { betterKick(N,S) : sumKick(N, S) } 1.
+#minimize {S, N : betterKick(N, S)}.
+
+sumHihat(N, S) :- sound(hihat, N, X, Y, Z), S = X+Y+Z.
+1 { betterHihat(N,S) : sumHihat(N, S) } 1.
+#maximize {S, N : betterHihat(N, S)}.
+
+sumSnare(N, S) :- sound(snare, N, S).
+1 { betterSnare(N,S) : sumSnare(N, S) } 1.
+#maximize {S : betterSnare(N, S)}.
+
+#show betterKick/2.
+#show betterHihat/2.
+#show betterSnare/2.
