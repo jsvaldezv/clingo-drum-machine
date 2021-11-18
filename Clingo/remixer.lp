@@ -38,7 +38,7 @@ rhythm(hihat,R) :- rHihat(R).
 pitchSnare(0) :- sound(snare).
 1 { eqSnare(100); eqSnare(200); eqSnare(300) } 1 :- sound(snare). % HPF
 
-1 { pitchHihat(1200); pitchHihat(1800); pitchHihat(2400) } 1 :- sound(hihat). % Cents
+1 { pitchHihat(1200); pitchHihat(1800); pitchHihat(1600) } 1 :- sound(hihat). % Cents
 1 { eqHihat(300); eqHihat(500); eqHihat(700) } 1 :- sound(hihat). % HPF
 
 fx(kick,P,E) :- pitchKick(P), eqKick(E).

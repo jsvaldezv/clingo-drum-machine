@@ -23,6 +23,8 @@ class Main(QMainWindow, QWidget):
         self.resultadosClingo = []
         self.cortesAudiosFinales = []
         self.objetosCheckboxes = []
+        self.resultadosAnalisis = []
+        self.bestLoop = []
 
         # TITLE #
         self.mainLabel = QLabel(self)
@@ -133,9 +135,10 @@ class Main(QMainWindow, QWidget):
 
         self.getfromClingo()
         self.soundDesign()
-        self.makePatterns()
         self.createCheckBoxes()
-        #self.makeAnalysis(loop, duration, samplerate)
+        self.makeAnalysis()
+        self.analizeWithClingo()
+        self.makePatterns()
 
     def getfromClingo(self):
         del self.resultadosClingo[:]
@@ -262,6 +265,7 @@ class Main(QMainWindow, QWidget):
             self.cortesAudiosFinales.append(corte)
 
     def makePatterns(self):
+        print("-------------")
         cont = 1
         contCortes = 0
         for corte in self.cortesAudiosFinales:
@@ -312,36 +316,70 @@ class Main(QMainWindow, QWidget):
             print(name, "creado")
             sf.write('../Results/' + name + '.wav', final, samplerate, 'PCM_24')
 
-            #if cont == 1:
-            #    self.plotAudio(final)
-
             cont += 1
+        print("-------------")
 
-    def makeAnalysis(self, audio, duration, samplerate):
-        samples = duration * samplerate
-        amplitude = np.abs(rfft(audio))
-        frequency = rfftfreq(int(samples), 1 / samplerate)
-        centroid = np.sum(amplitude * frequency) / np.sum(amplitude)
-        spread = utilities.spectralSpread(frequency, amplitude, centroid)
-        peakIndex = np.argmax(np.array(amplitude))
-        peak = frequency[peakIndex]
-        print("Centroid:", centroid, ", Spread:", spread, ", Peak:", peak)
+        kickIndex = self.bestLoop[0][1]
+        hihatIndex = self.bestLoop[1][1]
+        snareIndex = self.bestLoop[2][1]
+
+        kick = self.cortesAudiosFinales[int(str(kickIndex)) - 1][0][1]
+        hihat = self.cortesAudiosFinales[int(str(hihatIndex)) - 1][2][1]
+        snare = self.cortesAudiosFinales[int(str(snareIndex)) - 1][1][1]
+
+        kick, samplerate, long = patterns.makeKickPatternOne(kick, self.bpm.value(), self.spCompases.value(), 44100)
+        hihat, samplerate, long = patterns.makeHatPatternOne(hihat, self.bpm.value(), self.spCompases.value(), 44100)
+        snare, samplerate, long = patterns.makeSnarePatternOne(snare, self.bpm.value(), self.spCompases.value(), 44100)
+
+        samples = []
+        samples.append(kick)
+        samples.append(hihat)
+        samples.append(snare)
+
+        final = []
+        for cero in range(len(kick)):
+            final.append(0)
+
+        for ins in range(len(samples)):
+            for sample in range(len(samples[0])):
+                final[sample] += samples[ins][sample]
+
+        sf.write('../Results/best.wav', final, 44100, 'PCM_24')
+
+    def makeAnalysis(self):
+        del self.resultadosAnalisis[:]
+        print("Analisis")
+        for loop in range(len(self.cortesAudiosFinales)):
+            for corte in self.cortesAudiosFinales[loop]:
+                #print(str(corte[0]) + " " + str(loop+1))
+                amplitude = np.abs(rfft(corte[1]))
+                frequency = rfftfreq(len(corte[1]), 1 / 44100)
+                centroid = np.sum(amplitude * frequency) / np.sum(amplitude)
+                spread = utilities.spectralSpread(frequency, amplitude, centroid)
+                peakIndex = np.argmax(np.array(amplitude))
+                peak = frequency[peakIndex]
+                self.resultadosAnalisis.append([corte[0], loop+1, int(centroid), int(spread), int(peak)])
+                #print("Centroid:", centroid, ", Spread:", spread, ", Peak:", peak)
+
+        #print(self.resultadosAnalisis)
 
     def playSound(self):
         cont = 0
+        maxLen = len(self.objetosCheckboxes)
         for check in self.objetosCheckboxes:
-            if check.isChecked() == True:
-                print("Playing...")
-                path = "../Results/Loop_" + str(cont+1) + ".wav"
-                audio, sr = sf.read(path)
-                self.plotAudio(audio)
-                playsound.playsound(path)
-
-                '''import threading
-                thread = threading.Thread(target=self.plotAudio(audio))
-                thread.start()
-                thread.join()
-                playsound.playsound(path)'''
+            if cont+1 == maxLen:
+                if check.isChecked() == True:
+                    path = "../Results/best.wav"
+                    audio, sr = sf.read(path)
+                    self.plotAudio(audio)
+                    playsound.playsound(path)
+            else:
+                if check.isChecked() == True:
+                    print("Playing...")
+                    path = "../Results/Loop_" + str(cont+1) + ".wav"
+                    audio, sr = sf.read(path)
+                    self.plotAudio(audio)
+                    playsound.playsound(path)
 
             cont += 1
         print("-------------")
@@ -375,6 +413,61 @@ class Main(QMainWindow, QWidget):
             yInitChecBox += 30
             yInitLabel += 30
 
+        bestCheck = QCheckBox(self)
+        bestCheck.setGeometry(780, yInitChecBox, 100, 50)
+        bestCheck.show()
+        self.objetosCheckboxes.append(bestCheck)
+
+        bestCheckLabel = QLabel(self)
+        bestCheckLabel.setGeometry(800, yInitLabel, 100, 50)
+        bestCheckLabel.setText("Best Loop")
+        bestCheckLabel.show()
+
+    def analizeWithClingo(self):
+
+        del self.bestLoop[:]
+
+        controlAnalize = clingo.Control(utilities.clingo_args)
+        controlAnalize.configuration.solve.models = 0
+        controlAnalize.load("../Clingo/evaluate.lp")
+        models = []
+
+        # **** AÑADIR HECHOS A LP ***** #
+        for instrumento in self.resultadosAnalisis:
+            name = instrumento[0]
+            loop = str(instrumento[1])
+            centroid = str(instrumento[2])
+            spread = str(instrumento[3])
+            peak = str(instrumento[4])
+
+            fact = "sound(" + name + "," + loop + "," + centroid + "," + spread + "," + peak + ")."
+            controlAnalize.add("base", [], str(fact))
+
+        # ** GROUNDING *** #
+        print("-------------")
+        print("Grounding Analize...")
+        controlAnalize.ground([("base", [])])
+        print("-------------")
+
+        # ** SOLVE *** #
+        print("Solving Analize...")
+        with controlAnalize.solve(yield_=True) as solve_handle:
+            for model in solve_handle:
+                models.append(model.symbols(shown=True))
+        print("-------------")
+
+        print("El mejor", models[-1][0].arguments[0], "es el", models[-1][0].arguments[1])
+        print("El mejor", models[-1][1].arguments[0], "es el", models[-1][1].arguments[1])
+        print("El mejor", models[-1][2].arguments[0], "es el", models[-1][2].arguments[1])
+
+        self.printText("El mejor " + str(models[-1][0].arguments[0]) + " es el " + str(models[-1][0].arguments[1]))
+        self.printText("El mejor " + str(models[-1][1].arguments[0]) + " es el " + str(models[-1][1].arguments[1]))
+        self.printText("El mejor " + str(models[-1][2].arguments[0]) + " es el " + str(models[-1][2].arguments[1]))
+        self.printText("-------------")
+
+        self.bestLoop.append([models[-1][0].arguments[0], models[-1][0].arguments[1]])
+        self.bestLoop.append([models[-1][1].arguments[0], models[-1][1].arguments[1]])
+        self.bestLoop.append([models[-1][2].arguments[0], models[-1][2].arguments[1]])
 
 app = QApplication(sys.argv)
 demo = Main()
