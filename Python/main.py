@@ -23,6 +23,7 @@ class Main(QMainWindow, QWidget):
         self.resultadosClingo = []
         self.cortesAudiosFinales = []
         self.objetosCheckboxes = []
+        self.objetosLabels = []
         self.resultadosAnalisis = []
         self.bestLoop = []
 
@@ -394,10 +395,15 @@ class Main(QMainWindow, QWidget):
         yInitLabel = 0
 
         for check in range(len(self.objetosCheckboxes)):
-            globals()[f"checkBox_{check}"].hide()
-            globals()[f"checkBoxLabel_{check}"].hide()
+            if check < len(self.objetosCheckboxes)-1:
+                globals()[f"checkBox_{check}"].hide()
+                globals()[f"checkBoxLabel_{check}"].hide()
+            else:
+                self.objetosCheckboxes[-1].hide()
+                self.objetosLabels[-1].hide()
 
         del self.objetosCheckboxes[:]
+        del self.objetosLabels[:]
 
         for check in range(len(self.resultadosClingo)):
             globals()[f"checkBox_{check}"] = QCheckBox(self)
@@ -409,6 +415,7 @@ class Main(QMainWindow, QWidget):
             globals()[f"checkBoxLabel_{check}"].setGeometry(800, yInitLabel, 100, 50)
             globals()[f"checkBoxLabel_{check}"].setText("Loop "+str(check+1))
             globals()[f"checkBoxLabel_{check}"].show()
+            self.objetosLabels.append(globals()[f"checkBoxLabel_{check}"])
 
             yInitChecBox += 30
             yInitLabel += 30
@@ -422,6 +429,7 @@ class Main(QMainWindow, QWidget):
         bestCheckLabel.setGeometry(800, yInitLabel, 100, 50)
         bestCheckLabel.setText("Best Loop")
         bestCheckLabel.show()
+        self.objetosLabels.append(bestCheckLabel)
 
     def analizeWithClingo(self):
 
