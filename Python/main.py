@@ -27,21 +27,49 @@ class Main(QMainWindow, QWidget):
         self.resultadosAnalisis = []
         self.bestLoop = []
 
+        # BACKGROUND #
+        self.back = QLabel(self)
+        self.back.setGeometry(0, 0, 1000, 450)
+        self.back.setText("")
+        self.back.setPixmap(QPixmap("../Assets/back.png"))
+        self.back.setScaledContents(True)
+        self.back.setObjectName("back")
+
+        # MONA #
+        self.mona = QLabel(self)
+        self.mona.setGeometry(0, 390, 110, 60)
+        self.mona.setText("")
+        self.mona.setScaledContents(True)
+        self.mona.setObjectName("mona")
+        self.movieMona = QMovie("../Assets/mona.gif")
+        self.mona.setMovie(self.movieMona)
+        self.movieMona.start()
+
+        # DOG #
+        self.dog = QLabel(self)
+        self.dog.setGeometry(870, 370, 130, 80)
+        self.dog.setText("")
+        self.dog.setScaledContents(True)
+        self.dog.setObjectName("mona")
+        self.movieDog = QMovie("../Assets/perro.gif")
+        self.dog.setMovie(self.movieDog)
+        self.movieDog.start()
+
         # TITLE #
         self.mainLabel = QLabel(self)
         self.mainLabel.setText("SMART BUILDER")
-        self.mainLabel.setFont(QFont('Arial', 30))
+        self.mainLabel.setFont(QFont('Nixie One', 25))
         self.mainLabel.setGeometry(int(1000/2 - 120), 0, 245, 50)
 
         # LOAD AUDIOS #
-        self.btnMix = QPushButton('Create', self)
-        self.btnMix.setGeometry(10, 40, 100, 50)
-        self.btnMix.clicked.connect(lambda: self.startCreating())
+        self.btnCreate = QPushButton('Create', self)
+        self.btnCreate.setGeometry(10, 40, 100, 50)
+        self.btnCreate.clicked.connect(lambda: self.startCreating())
 
         # DELETE AUDIOS #
-        self.btnMix = QPushButton('Delete', self)
-        self.btnMix.setGeometry(10, 95, 100, 50)
-        self.btnMix.clicked.connect(lambda: self.clear())
+        self.btnDel = QPushButton('Delete', self)
+        self.btnDel.setGeometry(10, 95, 100, 50)
+        self.btnDel.clicked.connect(lambda: self.clear())
 
         # PLAY AUDIOS #
         self.play = QPushButton('Play', self)
@@ -51,6 +79,7 @@ class Main(QMainWindow, QWidget):
         # LOOPS #
         self.numMixes = QLabel(self)
         self.numMixes.setText("Loops:")
+        self.numMixes.setFont(QFont('Nixie One', 15))
         self.numMixes.setGeometry(15, 200, 120, 30)
 
         self.sp = QSpinBox(self)
@@ -62,6 +91,7 @@ class Main(QMainWindow, QWidget):
         # COMPASES #
         self.numCompases = QLabel(self)
         self.numCompases.setText("Compases:")
+        self.numCompases.setFont(QFont('Nixie One', 15))
         self.numCompases.setGeometry(15, 255, 140, 30)
 
         self.spCompases = QSpinBox(self)
@@ -73,6 +103,7 @@ class Main(QMainWindow, QWidget):
         # BPM #
         self.bpmLabel = QLabel(self)
         self.bpmLabel.setText("BPM:")
+        self.bpmLabel.setFont(QFont('Nixie One', 15))
         self.bpmLabel.setGeometry(15, 310, 140, 30)
 
         self.bpm = QSpinBox(self)
@@ -82,9 +113,10 @@ class Main(QMainWindow, QWidget):
         self.bpm.show()
 
         # KICK #
-        self.numMixes = QLabel(self)
-        self.numMixes.setText("Kick:")
-        self.numMixes.setGeometry(140, 40, 120, 30)
+        self.kickLabel = QLabel(self)
+        self.kickLabel.setText("Kick:")
+        self.kickLabel.setFont(QFont('Nixie One', 15))
+        self.kickLabel.setGeometry(140, 40, 120, 30)
         self.labels.append("kick")
 
         self.boxAudio = dragAudio.ListboxWidget(self)
@@ -92,9 +124,10 @@ class Main(QMainWindow, QWidget):
         self.cajitas.append(self.boxAudio)
 
         # SNARE #
-        self.numMixes = QLabel(self)
-        self.numMixes.setText("Snare:")
-        self.numMixes.setGeometry(260, 40, 120, 30)
+        self.snareLabel = QLabel(self)
+        self.snareLabel.setText("Snare:")
+        self.snareLabel.setFont(QFont('Nixie One', 15))
+        self.snareLabel.setGeometry(260, 40, 120, 30)
         self.labels.append("snare")
 
         self.boxAudioTwo = dragAudio.ListboxWidget(self)
@@ -102,9 +135,10 @@ class Main(QMainWindow, QWidget):
         self.cajitas.append(self.boxAudioTwo)
 
         # HI-HAT #
-        self.numMixes = QLabel(self)
-        self.numMixes.setText("Hi-hat:")
-        self.numMixes.setGeometry(380, 40, 120, 30)
+        self.hihatLabel = QLabel(self)
+        self.hihatLabel.setText("Hi-hat:")
+        self.hihatLabel.setFont(QFont('Nixie One', 15))
+        self.hihatLabel.setGeometry(380, 40, 120, 30)
         self.labels.append("hihat")
 
         self.boxAudioThree = dragAudio.ListboxWidget(self)
@@ -113,13 +147,12 @@ class Main(QMainWindow, QWidget):
 
         # TEXT BUTTON #
         self.textEdit = QTextEdit(self)
-        self.textEdit.setGeometry(500, 50, 250, 320)
+        self.textEdit.setGeometry(500, 75, 250, 320)
 
         # IMAGE #
         self.photo = QLabel(self)
         self.photo.setGeometry(140, 150, 340, 180)
         self.photo.setText("")
-        #self.photo.setPixmap(QPixmap("../pato.png"))
         self.photo.setScaledContents(True)
         self.photo.setObjectName("photo")
 
@@ -406,8 +439,8 @@ class Main(QMainWindow, QWidget):
         cursor.insertText(inText + "\n")
 
     def createCheckBoxes(self):
-        yInitChecBox = 0
-        yInitLabel = 0
+        yInitChecBox = 40
+        yInitLabel = 40
 
         for check in range(len(self.objetosCheckboxes)):
             if check < len(self.objetosCheckboxes)-1:
@@ -486,6 +519,7 @@ class Main(QMainWindow, QWidget):
         self.printText("El mejor " + str(models[-1][0].arguments[0]) + " es el " + str(models[-1][0].arguments[1]))
         self.printText("El mejor " + str(models[-1][1].arguments[0]) + " es el " + str(models[-1][1].arguments[1]))
         self.printText("El mejor " + str(models[-1][2].arguments[0]) + " es el " + str(models[-1][2].arguments[1]))
+        self.printText("")
         self.printText("-------------")
 
         self.bestLoop.append([models[-1][0].arguments[0], models[-1][0].arguments[1]])
