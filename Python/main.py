@@ -8,8 +8,8 @@ import soundfile as sf
 import clingo
 from scipy.fft import rfft, rfftfreq
 import numpy as np
-import playsound
 from pysndfx import AudioEffectsChain
+from pygame import mixer
 
 class Main(QMainWindow, QWidget):
 
@@ -55,7 +55,7 @@ class Main(QMainWindow, QWidget):
 
         self.sp = QSpinBox(self)
         self.sp.setGeometry(15, 225, 110, 30)
-        self.sp.setValue(4)
+        self.sp.setValue(2)
         self.sp.setRange(1, 100)
         self.sp.show()
 
@@ -115,6 +115,14 @@ class Main(QMainWindow, QWidget):
         self.textEdit = QTextEdit(self)
         self.textEdit.setGeometry(500, 50, 250, 320)
 
+        # IMAGE #
+        self.photo = QLabel(self)
+        self.photo.setGeometry(140, 150, 340, 180)
+        self.photo.setText("")
+        #self.photo.setPixmap(QPixmap("../pato.png"))
+        self.photo.setScaledContents(True)
+        self.photo.setObjectName("photo")
+
     def clear(self):
         for box in self.cajitas:
             box.clear()
@@ -122,8 +130,11 @@ class Main(QMainWindow, QWidget):
     def plotAudio(self, inAudio):
         chart = utilities.Canvas(self)
         chart.plotAudio(inAudio)
-        chart.setGeometry(140, 150, 340, 180)
-        chart.show()
+        self.photo.setPixmap(QPixmap("../Results/audio.png"))
+        #photo = QImage("../Results/audio.png")
+        #photo.load()
+        #chart.setGeometry(140, 150, 340, 180)
+        #chart.show()
 
     def startCreating(self):
         print("---------------------------------------------------------")
@@ -373,14 +384,18 @@ class Main(QMainWindow, QWidget):
                     path = "../Results/best.wav"
                     audio, sr = sf.read(path)
                     self.plotAudio(audio)
-                    playsound.playsound(path)
+                    mixer.init()
+                    sound = mixer.Sound(path)
+                    sound.play()
             else:
                 if check.isChecked() == True:
                     print("Playing...")
                     path = "../Results/Loop_" + str(cont+1) + ".wav"
                     audio, sr = sf.read(path)
                     self.plotAudio(audio)
-                    playsound.playsound(path)
+                    mixer.init()
+                    sound = mixer.Sound(path)
+                    sound.play()
 
             cont += 1
         print("-------------")
