@@ -63,17 +63,17 @@ class Main(QMainWindow, QWidget):
 
         # LOAD AUDIOS #
         self.btnCreate = QPushButton('Create', self)
-        self.btnCreate.setGeometry(10, 40, 100, 50)
+        self.btnCreate.setGeometry(10, 75, 100, 50)
         self.btnCreate.clicked.connect(lambda: self.startCreating())
 
         # DELETE AUDIOS #
         self.btnDel = QPushButton('Delete', self)
-        self.btnDel.setGeometry(10, 95, 100, 50)
+        self.btnDel.setGeometry(10, 135, 100, 50)
         self.btnDel.clicked.connect(lambda: self.clear())
 
         # PLAY AUDIOS #
         self.play = QPushButton('Play', self)
-        self.play.setGeometry(10, 150, 100, 50)
+        self.play.setGeometry(760, 71, 100, 50)
         self.play.clicked.connect(lambda: self.playSound())
 
         # LOOPS #
@@ -439,8 +439,8 @@ class Main(QMainWindow, QWidget):
         cursor.insertText(inText + "\n")
 
     def createCheckBoxes(self):
-        yInitChecBox = 40
-        yInitLabel = 40
+        yInitChecBox = 120
+        yInitLabel = 120
 
         for check in range(len(self.objetosCheckboxes)):
             if check < len(self.objetosCheckboxes)-1:
@@ -455,12 +455,12 @@ class Main(QMainWindow, QWidget):
 
         for check in range(len(self.resultadosClingo)):
             globals()[f"checkBox_{check}"] = QRadioButton(self)
-            globals()[f"checkBox_{check}"].setGeometry(780, yInitChecBox, 100, 50)
+            globals()[f"checkBox_{check}"].setGeometry(765, yInitChecBox, 100, 50)
             globals()[f"checkBox_{check}"].show()
             self.objetosCheckboxes.append(globals()[f"checkBox_{check}"])
 
             globals()[f"checkBoxLabel_{check}"] = QLabel(self)
-            globals()[f"checkBoxLabel_{check}"].setGeometry(800, yInitLabel, 100, 50)
+            globals()[f"checkBoxLabel_{check}"].setGeometry(785, yInitLabel, 100, 50)
             globals()[f"checkBoxLabel_{check}"].setText("Loop "+str(check+1))
             globals()[f"checkBoxLabel_{check}"].show()
             self.objetosLabels.append(globals()[f"checkBoxLabel_{check}"])
@@ -469,12 +469,12 @@ class Main(QMainWindow, QWidget):
             yInitLabel += 30
 
         bestCheck = QRadioButton(self)
-        bestCheck.setGeometry(780, yInitChecBox, 100, 50)
+        bestCheck.setGeometry(765, yInitChecBox, 100, 50)
         bestCheck.show()
         self.objetosCheckboxes.append(bestCheck)
 
         bestCheckLabel = QLabel(self)
-        bestCheckLabel.setGeometry(800, yInitLabel, 100, 50)
+        bestCheckLabel.setGeometry(785, yInitLabel, 100, 50)
         bestCheckLabel.setText("Best Loop")
         bestCheckLabel.show()
         self.objetosLabels.append(bestCheckLabel)
