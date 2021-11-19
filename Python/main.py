@@ -55,6 +55,16 @@ class Main(QMainWindow, QWidget):
         self.dog.setMovie(self.movieDog)
         self.movieDog.start()
 
+        # KIRBY #
+        self.kirby = QLabel(self)
+        self.kirby.setGeometry(930, 0, 60, 60)
+        self.kirby.setText("")
+        self.kirby.setScaledContents(True)
+        self.kirby.setObjectName("mona")
+        self.moviekirby = QMovie("../Assets/kirby.gif")
+        self.kirby.setMovie(self.moviekirby)
+        self.moviekirby.start()
+
         # TITLE #
         self.mainLabel = QLabel(self)
         self.mainLabel.setText("SMART BUILDER")
