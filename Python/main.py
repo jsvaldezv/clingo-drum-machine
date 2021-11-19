@@ -55,7 +55,7 @@ class Main(QMainWindow, QWidget):
 
         self.sp = QSpinBox(self)
         self.sp.setGeometry(15, 225, 110, 30)
-        self.sp.setValue(1)
+        self.sp.setValue(4)
         self.sp.setRange(1, 100)
         self.sp.show()
 
@@ -66,7 +66,7 @@ class Main(QMainWindow, QWidget):
 
         self.spCompases = QSpinBox(self)
         self.spCompases.setGeometry(15, 280, 110, 30)
-        self.spCompases.setValue(4)
+        self.spCompases.setValue(2)
         self.spCompases.setRange(1, 12)
         self.spCompases.show()
 
@@ -406,7 +406,7 @@ class Main(QMainWindow, QWidget):
         del self.objetosLabels[:]
 
         for check in range(len(self.resultadosClingo)):
-            globals()[f"checkBox_{check}"] = QCheckBox(self)
+            globals()[f"checkBox_{check}"] = QRadioButton(self)
             globals()[f"checkBox_{check}"].setGeometry(780, yInitChecBox, 100, 50)
             globals()[f"checkBox_{check}"].show()
             self.objetosCheckboxes.append(globals()[f"checkBox_{check}"])
@@ -420,7 +420,7 @@ class Main(QMainWindow, QWidget):
             yInitChecBox += 30
             yInitLabel += 30
 
-        bestCheck = QCheckBox(self)
+        bestCheck = QRadioButton(self)
         bestCheck.setGeometry(780, yInitChecBox, 100, 50)
         bestCheck.show()
         self.objetosCheckboxes.append(bestCheck)
