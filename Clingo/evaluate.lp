@@ -19,15 +19,18 @@
 %sound(snare,4,1000,0,0).
 %sound(snare,5,6000,0,0).
 
-sumKick(N, S) :- sound(kick, N, X, Y, Z), S = X+Y+Z.
+%% Sum the centroid and peak of each kick, and then choose the lowest.
+sumKick(N, S) :- sound(kick, N, X, Y, Z), S = X+Z.
 1 { betterKick(kick, N,S) : sumKick(N, S) } 1.
 #minimize {S, N : betterKick(kick, N, S)}.
 
-sumHihat(N, S) :- sound(hihat, N, X, Y, Z), S = X+Y+Z.
+%% Sum the centroid and peak of each hi-hat, and then choose the highest.
+sumHihat(N, S) :- sound(hihat, N, X, Y, Z), S = X+Z.
 1 { betterHihat(hihat, N,S) : sumHihat(N, S) } 1.
 #maximize {S, N : betterHihat(hihat, N, S)}.
 
-sumSnare(N, S) :- sound(snare, N, X, Y, Z), S = X.
+%% Chose the snare with the largest spread (presence).
+sumSnare(N, S) :- sound(snare, N, X, Y, Z), S = Y.
 1 { betterSnare(snare, N,S) : sumSnare(N, S) } 1.
 #maximize {S, N : betterSnare(snare, N, S)}.
 
