@@ -5,6 +5,8 @@ By:
 - Jacques Martell Villalpando
 - Misael Sánchez Resendiz
 
+<img width="995" alt="builder" src="https://user-images.githubusercontent.com/47612276/143788853-f8e6d8c9-085d-445d-990b-ada0aa87f816.png">
+
 Smart drum machine with Python and Clingo where you can choose which sound will be the kick, which the snare and which the hihat. Then, the A.I. will make a sound
 design, a beat and will give you the best loop based on the centroid, spread and maximun peak. The intelligence is based on Answer Set Programming using Clingo.
 
