@@ -1,10 +1,5 @@
 ## Smart Builder
 
-By: 
-- Jesús Salvador Valdez Vázquez
-- Jacques Martell Villalpando
-- Misael Sánchez Resendiz
-
 <img width="995" alt="builder" src="https://user-images.githubusercontent.com/47612276/143788853-f8e6d8c9-085d-445d-990b-ada0aa87f816.png">
 
 Smart drum machine with Python and Clingo where you can choose which sound will be the kick, which the snare and which the hihat. Then, the A.I. will make a sound
@@ -41,15 +36,3 @@ Note: The mixer was programed and tested in pycharm.
   
 4. Compile.
 5. Enjoy!
-
-### Follow me
-
-- Twitter: https://twitter.com/anticode_
-
-## Follow my audio plug-ins company Ear Candy Technologies: 
-
-- Facebook: https://www.facebook.com/earcandytechnologies 
-- Twitter: https://twitter.com/EarCandyTech 
-- Instagram: https://www.instagram.com/earcandytechnology/ 
-- Youtube: https://www.youtube.com/channel/UCnmhLuxpV3PftGI2YR5kpFA 
-- Discord Server: https://discord.gg/44d6SEmw
