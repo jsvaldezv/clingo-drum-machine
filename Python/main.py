@@ -11,8 +11,8 @@ import numpy as np
 from pysndfx import AudioEffectsChain
 from pygame import mixer
 
-class Main(QMainWindow, QWidget):
 
+class Main(QMainWindow, QWidget):
     def __init__(self):
         super().__init__()
         self.resize(1000, 450)
@@ -27,59 +27,51 @@ class Main(QMainWindow, QWidget):
         self.resultadosAnalisis = []
         self.bestLoop = []
 
-        # BACKGROUND #
-        self.back = QLabel(self)
-        self.back.setGeometry(0, 0, 1000, 450)
-        self.back.setText("")
-        self.back.setPixmap(QPixmap("../Assets/back.png"))
-        self.back.setScaledContents(True)
-        self.back.setObjectName("back")
-
-        # MONA #
+        # Lady
         self.mona = QLabel(self)
         self.mona.setGeometry(0, 390, 110, 60)
         self.mona.setText("")
         self.mona.setScaledContents(True)
-        self.mona.setObjectName("mona")
-        self.movieMona = QMovie("../Assets/mona.gif")
+        self.mona.setObjectName("lady")
+        self.movieMona = QMovie("Assets/lady.gif")
         self.mona.setMovie(self.movieMona)
         self.movieMona.start()
 
-        # DOG #
+        # Dodg
         self.dog = QLabel(self)
         self.dog.setGeometry(870, 370, 130, 80)
         self.dog.setText("")
         self.dog.setScaledContents(True)
-        self.dog.setObjectName("mona")
-        self.movieDog = QMovie("../Assets/perro.gif")
+        self.dog.setObjectName("dog")
+        self.movieDog = QMovie("Assets/dog.gif")
         self.dog.setMovie(self.movieDog)
         self.movieDog.start()
 
-        # TITLE #
+        # Title
         self.mainLabel = QLabel(self)
         self.mainLabel.setText("SMART BUILDER")
-        self.mainLabel.setFont(QFont('Nixie One', 25))
-        self.mainLabel.setGeometry(int(1000/2 - 120), 0, 245, 50)
+        self.mainLabel.setFont(QFont("Nixie One", 25))
+        self.mainLabel.setGeometry(int(1000 / 2 - 120), 0, 245, 50)
 
-        # LOAD AUDIOS #
-        self.btnCreate = QPushButton('Create', self)
+        # Load audios
+        self.btnCreate = QPushButton("Create", self)
         self.btnCreate.setGeometry(10, 75, 100, 50)
         self.btnCreate.clicked.connect(lambda: self.startCreating())
 
-        # DELETE AUDIOS #
-        self.btnDel = QPushButton('Delete', self)
+        # Delete audios
+        self.btnDel = QPushButton("Delete", self)
         self.btnDel.setGeometry(10, 135, 100, 50)
         self.btnDel.clicked.connect(lambda: self.clear())
 
-        # PLAY AUDIOS #
-        self.play = QPushButton('Play', self)
+        # Play audios
+        self.play = QPushButton("Play", self)
         self.play.setGeometry(760, 71, 100, 50)
         self.play.clicked.connect(lambda: self.playSound())
 
-        # LOOPS #
+        # Loops
         self.numMixes = QLabel(self)
         self.numMixes.setText("Loops:")
-        self.numMixes.setFont(QFont('Nixie One', 15))
+        self.numMixes.setFont(QFont("Nixie One", 15))
         self.numMixes.setGeometry(15, 200, 120, 30)
 
         self.sp = QSpinBox(self)
@@ -88,10 +80,10 @@ class Main(QMainWindow, QWidget):
         self.sp.setRange(1, 100)
         self.sp.show()
 
-        # COMPASES #
+        # Bars
         self.numCompases = QLabel(self)
-        self.numCompases.setText("Compases:")
-        self.numCompases.setFont(QFont('Nixie One', 15))
+        self.numCompases.setText("Bars:")
+        self.numCompases.setFont(QFont("Nixie One", 15))
         self.numCompases.setGeometry(15, 255, 140, 30)
 
         self.spCompases = QSpinBox(self)
@@ -100,10 +92,10 @@ class Main(QMainWindow, QWidget):
         self.spCompases.setRange(1, 12)
         self.spCompases.show()
 
-        # BPM #
+        # BPM
         self.bpmLabel = QLabel(self)
         self.bpmLabel.setText("BPM:")
-        self.bpmLabel.setFont(QFont('Nixie One', 15))
+        self.bpmLabel.setFont(QFont("Nixie One", 15))
         self.bpmLabel.setGeometry(15, 310, 140, 30)
 
         self.bpm = QSpinBox(self)
@@ -112,10 +104,10 @@ class Main(QMainWindow, QWidget):
         self.bpm.setRange(60, 210)
         self.bpm.show()
 
-        # KICK #
+        # Kick
         self.kickLabel = QLabel(self)
         self.kickLabel.setText("Kick:")
-        self.kickLabel.setFont(QFont('Nixie One', 15))
+        self.kickLabel.setFont(QFont("Nixie One", 15))
         self.kickLabel.setGeometry(140, 40, 120, 30)
         self.labels.append("kick")
 
@@ -123,10 +115,10 @@ class Main(QMainWindow, QWidget):
         self.boxAudio.setGeometry(140, 75, 100, 50)
         self.cajitas.append(self.boxAudio)
 
-        # SNARE #
+        # Snare
         self.snareLabel = QLabel(self)
         self.snareLabel.setText("Snare:")
-        self.snareLabel.setFont(QFont('Nixie One', 15))
+        self.snareLabel.setFont(QFont("Nixie One", 15))
         self.snareLabel.setGeometry(260, 40, 120, 30)
         self.labels.append("snare")
 
@@ -134,10 +126,10 @@ class Main(QMainWindow, QWidget):
         self.boxAudioTwo.setGeometry(260, 75, 100, 50)
         self.cajitas.append(self.boxAudioTwo)
 
-        # HI-HAT #
+        # Hi hat
         self.hihatLabel = QLabel(self)
         self.hihatLabel.setText("Hi-hat:")
-        self.hihatLabel.setFont(QFont('Nixie One', 15))
+        self.hihatLabel.setFont(QFont("Nixie One", 15))
         self.hihatLabel.setGeometry(380, 40, 120, 30)
         self.labels.append("hihat")
 
@@ -145,11 +137,11 @@ class Main(QMainWindow, QWidget):
         self.boxAudioThree.setGeometry(380, 75, 100, 50)
         self.cajitas.append(self.boxAudioThree)
 
-        # TEXT BUTTON #
+        # Text button
         self.textEdit = QTextEdit(self)
         self.textEdit.setGeometry(500, 75, 250, 320)
 
-        # IMAGE #
+        # Image
         self.photo = QLabel(self)
         self.photo.setGeometry(140, 150, 340, 180)
         self.photo.setText("")
@@ -163,11 +155,7 @@ class Main(QMainWindow, QWidget):
     def plotAudio(self, inAudio):
         chart = utilities.Canvas(self)
         chart.plotAudio(inAudio)
-        self.photo.setPixmap(QPixmap("../Results/audio.png"))
-        #photo = QImage("../Results/audio.png")
-        #photo.load()
-        #chart.setGeometry(140, 150, 340, 180)
-        #chart.show()
+        self.photo.setPixmap(QPixmap("Results/audio.png"))
 
     def startCreating(self):
         print("---------------------------------------------------------")
@@ -187,15 +175,15 @@ class Main(QMainWindow, QWidget):
 
     def getfromClingo(self):
         del self.resultadosClingo[:]
-        # ** CONFIGURAR Y CARGAR CLINGO *** #
+        # Configure and load clingo
         control = clingo.Control(utilities.clingo_args)
         if self.sp.value() != 0:
             control.configuration.solve.models = self.sp.value()
 
-            control.load("../Clingo/remixer.lp")
+            control.load("Clingo/remixer.lp")
             models = []
 
-            # **** AÑADIR HECHOS A LP ***** #
+            # Add facts to LP
             cont = 0
             for instrumento in self.cajitas:
                 path = QListWidgetItem(instrumento.item(0))
@@ -206,14 +194,14 @@ class Main(QMainWindow, QWidget):
 
                 cont += 1
 
-            # ** GROUNDING *** #
+            # Grounding
             print("Grounding...")
             self.printText("Grounding...")
             control.ground([("base", [])])
             print("-------------")
             self.printText("-------------")
 
-            # ** SOLVE *** #
+            # Solve
             print("Solving...")
             self.printText("Solving...")
             with control.solve(yield_=True) as solve_handle:
@@ -243,8 +231,20 @@ class Main(QMainWindow, QWidget):
                     result.append(eq)
                     resp.append(result)
 
-                    print("Para", instrument, "aplicar:", attack, "de attack,", release, "de release,", pitchShift,
-                          "de pitch shift y", eq, "de EQ en el patrón", pattern)
+                    print(
+                        "Para",
+                        instrument,
+                        "aplicar:",
+                        attack,
+                        "de attack,",
+                        release,
+                        "de release,",
+                        pitchShift,
+                        "de pitch shift y",
+                        eq,
+                        "de EQ en el patrón",
+                        pattern,
+                    )
 
                     self.printText(str(instrument.upper() + "..."))
                     self.printText("• Patrón " + str(pattern))
@@ -260,7 +260,6 @@ class Main(QMainWindow, QWidget):
                 self.printText("-------------")
                 self.printText("")
             print("-------------")
-            #self.printText("-------------")
 
         else:
             dialog = QMessageBox()
@@ -276,30 +275,30 @@ class Main(QMainWindow, QWidget):
         for design in self.resultadosClingo:
             corte = []
             for instrument in design:
-
-                if instrument[0] == 'kick':
+                if instrument[0] == "kick":
                     caja = self.cajitas[0]
-                elif instrument[0] == 'snare':
+                elif instrument[0] == "snare":
                     caja = self.cajitas[1]
                 else:
                     caja = self.cajitas[2]
 
-                #caja = self.cajitas[cont]
                 path = QListWidgetItem(caja.item(0))
 
                 if path.text():
-                    # CUT
+                    # Cut
                     audio, samplerate = utilities.makeCut(path.text(), 400)
-                    # ENVELOPE
-                    audio = utilities.applyEnvelope(audio, samplerate, instrument[1], instrument[2])
-                    # PITCH SHIFTING
+
+                    # Envelop
+                    audio = utilities.applyEnvelope(
+                        audio, samplerate, instrument[1], instrument[2]
+                    )
+
+                    # Pitch shifting
                     pitch = AudioEffectsChain().pitch(shift=instrument[4])
                     audio = pitch(np.array(audio))
+
                     # EQ
                     audio = utilities.applyFilter(audio, instrument[0], instrument[5])
-                    # WRITE
-                    #name = instrument[0] + '_' + str(i)
-                    #sf.write('../Results/' + name + '.wav', audio, samplerate, 'PCM_24')
 
                     corte.append([instrument[0], audio])
 
@@ -321,29 +320,47 @@ class Main(QMainWindow, QWidget):
                 values = 0
                 numCompases = self.spCompases.value()
                 bpm = self.bpm.value()
-                if sample[0] == 'kick':
+                if sample[0] == "kick":
                     if self.resultadosClingo[contCortes][0][3] == 1:
-                        values, samplerate, long = patterns.makeKickPatternOne(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeKickPatternOne(
+                            sample[1], bpm, numCompases, 44100
+                        )
                     elif self.resultadosClingo[contCortes][0][3] == 2:
-                        values, samplerate, long = patterns.makeKickPatternTwo(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeKickPatternTwo(
+                            sample[1], bpm, numCompases, 44100
+                        )
                     elif self.resultadosClingo[contCortes][0][3] == 3:
-                        values, samplerate, long = patterns.makeKickPatternDNB(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeKickPatternDNB(
+                            sample[1], bpm, numCompases, 44100
+                        )
 
-                elif sample[0] == 'snare':
+                elif sample[0] == "snare":
                     if self.resultadosClingo[contCortes][0][3] == 1:
-                        values, samplerate, long = patterns.makeSnarePatternOne(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeSnarePatternOne(
+                            sample[1], bpm, numCompases, 44100
+                        )
                     elif self.resultadosClingo[contCortes][0][3] == 2:
-                        values, samplerate, long = patterns.makeSnarePatternTwo(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeSnarePatternTwo(
+                            sample[1], bpm, numCompases, 44100
+                        )
                     elif self.resultadosClingo[contCortes][0][3] == 3:
-                        values, samplerate, long = patterns.makeSnareDembow(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeSnareDembow(
+                            sample[1], bpm, numCompases, 44100
+                        )
 
-                elif sample[0] == 'hihat':
+                elif sample[0] == "hihat":
                     if self.resultadosClingo[contCortes][0][3] == 1:
-                        values, samplerate, long = patterns.makeHatPatternOne(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeHatPatternOne(
+                            sample[1], bpm, numCompases, 44100
+                        )
                     elif self.resultadosClingo[contCortes][0][3] == 2:
-                        values, samplerate, long = patterns.makeHatPatternTwo(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeHatPatternTwo(
+                            sample[1], bpm, numCompases, 44100
+                        )
                     elif self.resultadosClingo[contCortes][0][3] == 3:
-                        values, samplerate, long = patterns.makeHatPatternThree(sample[1], bpm, numCompases, 44100)
+                        values, samplerate, long = patterns.makeHatPatternThree(
+                            sample[1], bpm, numCompases, 44100
+                        )
 
                 samples.append(values)
             contCortes += 1
@@ -357,9 +374,9 @@ class Main(QMainWindow, QWidget):
                 for sample in range(len(samples[0])):
                     final[sample] += samples[ins][sample]
 
-            name = 'Loop_' + str(cont)
+            name = "Loop_" + str(cont)
             print(name, "creado")
-            sf.write('../Results/' + name + '.wav', final, samplerate, 'PCM_24')
+            sf.write("Results/" + name + ".wav", final, samplerate, "PCM_24")
 
             cont += 1
         print("-------------")
@@ -372,9 +389,15 @@ class Main(QMainWindow, QWidget):
         hihat = self.cortesAudiosFinales[int(str(hihatIndex)) - 1][2][1]
         snare = self.cortesAudiosFinales[int(str(snareIndex)) - 1][1][1]
 
-        kick, samplerate, long = patterns.makeKickPatternOne(kick, self.bpm.value(), self.spCompases.value(), 44100)
-        hihat, samplerate, long = patterns.makeHatPatternOne(hihat, self.bpm.value(), self.spCompases.value(), 44100)
-        snare, samplerate, long = patterns.makeSnarePatternOne(snare, self.bpm.value(), self.spCompases.value(), 44100)
+        kick, samplerate, long = patterns.makeKickPatternOne(
+            kick, self.bpm.value(), self.spCompases.value(), 44100
+        )
+        hihat, samplerate, long = patterns.makeHatPatternOne(
+            hihat, self.bpm.value(), self.spCompases.value(), 44100
+        )
+        snare, samplerate, long = patterns.makeSnarePatternOne(
+            snare, self.bpm.value(), self.spCompases.value(), 44100
+        )
 
         samples = []
         samples.append(kick)
@@ -389,32 +412,30 @@ class Main(QMainWindow, QWidget):
             for sample in range(len(samples[0])):
                 final[sample] += samples[ins][sample]
 
-        sf.write('../Results/best.wav', final, 44100, 'PCM_24')
+        sf.write("Results/best.wav", final, 44100, "PCM_24")
 
     def makeAnalysis(self):
         del self.resultadosAnalisis[:]
         print("Analisis")
         for loop in range(len(self.cortesAudiosFinales)):
             for corte in self.cortesAudiosFinales[loop]:
-                #print(str(corte[0]) + " " + str(loop+1))
                 amplitude = np.abs(rfft(corte[1]))
                 frequency = rfftfreq(len(corte[1]), 1 / 44100)
                 centroid = np.sum(amplitude * frequency) / np.sum(amplitude)
                 spread = utilities.spectralSpread(frequency, amplitude, centroid)
                 peakIndex = np.argmax(np.array(amplitude))
                 peak = frequency[peakIndex]
-                self.resultadosAnalisis.append([corte[0], loop+1, int(centroid), int(spread), int(peak)])
-                #print("Centroid:", centroid, ", Spread:", spread, ", Peak:", peak)
-
-        #print(self.resultadosAnalisis)
+                self.resultadosAnalisis.append(
+                    [corte[0], loop + 1, int(centroid), int(spread), int(peak)]
+                )
 
     def playSound(self):
         cont = 0
         maxLen = len(self.objetosCheckboxes)
         for check in self.objetosCheckboxes:
-            if cont+1 == maxLen:
+            if cont + 1 == maxLen:
                 if check.isChecked() == True:
-                    path = "../Results/best.wav"
+                    path = "Results/best.wav"
                     audio, sr = sf.read(path)
                     self.plotAudio(audio)
                     mixer.init()
@@ -423,7 +444,7 @@ class Main(QMainWindow, QWidget):
             else:
                 if check.isChecked() == True:
                     print("Playing...")
-                    path = "../Results/Loop_" + str(cont+1) + ".wav"
+                    path = "Results/Loop_" + str(cont + 1) + ".wav"
                     audio, sr = sf.read(path)
                     self.plotAudio(audio)
                     mixer.init()
@@ -443,7 +464,7 @@ class Main(QMainWindow, QWidget):
         yInitLabel = 120
 
         for check in range(len(self.objetosCheckboxes)):
-            if check < len(self.objetosCheckboxes)-1:
+            if check < len(self.objetosCheckboxes) - 1:
                 globals()[f"checkBox_{check}"].hide()
                 globals()[f"checkBoxLabel_{check}"].hide()
             else:
@@ -461,7 +482,7 @@ class Main(QMainWindow, QWidget):
 
             globals()[f"checkBoxLabel_{check}"] = QLabel(self)
             globals()[f"checkBoxLabel_{check}"].setGeometry(785, yInitLabel, 100, 50)
-            globals()[f"checkBoxLabel_{check}"].setText("Loop "+str(check+1))
+            globals()[f"checkBoxLabel_{check}"].setText("Loop " + str(check + 1))
             globals()[f"checkBoxLabel_{check}"].show()
             self.objetosLabels.append(globals()[f"checkBoxLabel_{check}"])
 
@@ -480,15 +501,14 @@ class Main(QMainWindow, QWidget):
         self.objetosLabels.append(bestCheckLabel)
 
     def analizeWithClingo(self):
-
         del self.bestLoop[:]
 
         controlAnalize = clingo.Control(utilities.clingo_args)
         controlAnalize.configuration.solve.models = 0
-        controlAnalize.load("../Clingo/evaluate.lp")
+        controlAnalize.load("Clingo/evaluate.lp")
         models = []
 
-        # **** AÑADIR HECHOS A LP ***** #
+        # Add facts to LP
         for instrumento in self.resultadosAnalisis:
             name = instrumento[0]
             loop = str(instrumento[1])
@@ -496,35 +516,69 @@ class Main(QMainWindow, QWidget):
             spread = str(instrumento[3])
             peak = str(instrumento[4])
 
-            fact = "sound(" + name + "," + loop + "," + centroid + "," + spread + "," + peak + ")."
+            fact = (
+                "sound("
+                + name
+                + ","
+                + loop
+                + ","
+                + centroid
+                + ","
+                + spread
+                + ","
+                + peak
+                + ")."
+            )
             controlAnalize.add("base", [], str(fact))
 
-        # ** GROUNDING *** #
+        # Grounding
         print("-------------")
         print("Grounding Analize...")
         controlAnalize.ground([("base", [])])
         print("-------------")
 
-        # ** SOLVE *** #
+        # Solve
         print("Solving Analize...")
         with controlAnalize.solve(yield_=True) as solve_handle:
             for model in solve_handle:
                 models.append(model.symbols(shown=True))
         print("-------------")
 
-        print("El mejor", models[-1][0].arguments[0], "es el", models[-1][0].arguments[1])
-        print("El mejor", models[-1][1].arguments[0], "es el", models[-1][1].arguments[1])
-        print("El mejor", models[-1][2].arguments[0], "es el", models[-1][2].arguments[1])
+        print(
+            "The best ", models[-1][0].arguments[0], " is ", models[-1][0].arguments[1]
+        )
+        print(
+            "The best ", models[-1][1].arguments[0], " is ", models[-1][1].arguments[1]
+        )
+        print(
+            "The best ", models[-1][2].arguments[0], " is ", models[-1][2].arguments[1]
+        )
 
-        self.printText("El mejor " + str(models[-1][0].arguments[0]) + " es el " + str(models[-1][0].arguments[1]))
-        self.printText("El mejor " + str(models[-1][1].arguments[0]) + " es el " + str(models[-1][1].arguments[1]))
-        self.printText("El mejor " + str(models[-1][2].arguments[0]) + " es el " + str(models[-1][2].arguments[1]))
+        self.printText(
+            "The best "
+            + str(models[-1][0].arguments[0])
+            + " is "
+            + str(models[-1][0].arguments[1])
+        )
+        self.printText(
+            "The best "
+            + str(models[-1][1].arguments[0])
+            + " is "
+            + str(models[-1][1].arguments[1])
+        )
+        self.printText(
+            "The best "
+            + str(models[-1][2].arguments[0])
+            + " is "
+            + str(models[-1][2].arguments[1])
+        )
         self.printText("")
         self.printText("-------------")
 
         self.bestLoop.append([models[-1][0].arguments[0], models[-1][0].arguments[1]])
         self.bestLoop.append([models[-1][1].arguments[0], models[-1][1].arguments[1]])
         self.bestLoop.append([models[-1][2].arguments[0], models[-1][2].arguments[1]])
+
 
 app = QApplication(sys.argv)
 demo = Main()

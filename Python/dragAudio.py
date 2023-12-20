@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QListWidget
 from PyQt5.QtCore import Qt
 
-class ListboxWidget(QListWidget):
 
-    def __init__(self,  parent=None):
+class ListboxWidget(QListWidget):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.setAcceptDrops(True)
 

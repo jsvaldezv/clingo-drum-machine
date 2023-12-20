@@ -1,10 +1,9 @@
 import utilities
-import soundfile as sf
 
-#kick 1/4
-def makeKickPatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
 
-    #Simple QuarterNote [1/4] Pattern
+# kick 1/4
+def makeKickPatternOne(inAudio, inBPM, inNumCompas, inSampleRate):
+    # Simple QuarterNote [1/4] Pattern
     audio = inAudio
     kickInterval = utilities.computeInterval(inBPM, inSampleRate)
     loopKick = []
@@ -49,22 +48,17 @@ def makeKickPatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
         for sample in loopKick:
             compasCompleto.append(sample)
 
-    #sf.write('../Results/LoopKickOne.wav', compasCompleto, inSampleRate, 'PCM_24')
-
-    #print("KICK LOOP CREADO")
-    #print("-----------")
-
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)  #  #kick
 
-#kick 1/8 var
-def makeKickPatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
 
+# kick 1/8 var
+def makeKickPatternTwo(inAudio, inBPM, inNumCompas, inSampleRate):
     # Eight note [1/8] pattern with variations
     audio = inAudio
     kickInterval = utilities.computeInterval(inBPM, inSampleRate)
     loopKick = []
 
-    intervalOne = kickInterval/2
+    intervalOne = kickInterval / 2
     intervalTwo = kickInterval
     intervalTres = kickInterval * 1.5
     intervalCuatro = kickInterval * 2
@@ -125,23 +119,18 @@ def makeKickPatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
         for sample in loopKick:
             compasCompleto.append(sample)
 
-    #sf.write('../Results/LoopKickTwo.wav', compasCompleto, inSampleRate, 'PCM_24')
-
-    #print("KICK LOOP CREADO")
-    #print("-----------")
-
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
-#kick 1/16
-def makeKickPatternDNB(inAudio, inBPM, inNumCompas,inSampleRate):
 
+# kick 1/16
+def makeKickPatternDNB(inAudio, inBPM, inNumCompas, inSampleRate):
     # Simple sixteenth note [1/16] pattern
     audio = inAudio
     hatInterval = utilities.computeInterval(inBPM, inSampleRate)
     loopHat = []
 
-    intervalOne = hatInterval/4
-    intervalTwo = hatInterval/2
+    intervalOne = hatInterval / 4
+    intervalTwo = hatInterval / 2
     intervalTres = hatInterval * 0.75
     intervalCuatro = hatInterval
     intervalCinco = hatInterval * 1.25
@@ -157,7 +146,16 @@ def makeKickPatternDNB(inAudio, inBPM, inNumCompas,inSampleRate):
     intervalQuince = hatInterval * 3.75
 
     cont, cont2, cont3, cont4, cont5, cont6, cont7, cont8 = 0, 0, 0, 0, 0, 0, 0, 0
-    cont9, cont10, cont11, cont12, cont13, cont14, cont15, cont16 = 0, 0, 0, 0, 0, 0, 0, 0
+    cont9, cont10, cont11, cont12, cont13, cont14, cont15, cont16 = (
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    )
 
     for sample in range(hatInterval * 4):
         if sample < intervalOne:
@@ -234,17 +232,12 @@ def makeKickPatternDNB(inAudio, inBPM, inNumCompas,inSampleRate):
         for sample in loopHat:
             compasCompleto.append(sample)
 
-    #sf.write('../Results/LoopHatTwo.wav', compasCompleto, inSampleRate, 'PCM_24')
-
-    #print("HIHAT LOOP CREADO")
-    #print("-----------")
-
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
-#snare 1/4
-def makeSnarePatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
 
-    #QuarterNote [1/4] Pattern with OFFSET
+# snare 1/4
+def makeSnarePatternOne(inAudio, inBPM, inNumCompas, inSampleRate):
+    # QuarterNote [1/4] Pattern with OFFSET
     audio = inAudio
     snareInterval = utilities.computeInterval(inBPM, inSampleRate)
     loopSnare = []
@@ -257,9 +250,9 @@ def makeSnarePatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
 
     for sample in range(snareInterval * 4):
         if sample < intervalOne:
-            #if cont < len(audio):
-                #loopSnare.append(0)
-            #else:
+            # if cont < len(audio):
+            # loopSnare.append(0)
+            # else:
             loopSnare.append(0)
             cont += 1
         elif sample >= intervalOne and sample < intervalTwo:
@@ -269,7 +262,7 @@ def makeSnarePatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
                 loopSnare.append(0)
             cont2 += 1
         elif sample >= intervalTwo and sample < intervalTres:
-            #if cont3 < len(audio):
+            # if cont3 < len(audio):
             loopSnare.append(0)
             cont3 += 1
         else:
@@ -284,22 +277,17 @@ def makeSnarePatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
         for sample in loopSnare:
             compasCompleto.append(sample)
 
-    #sf.write('../Results/LoopSnareOne.wav', compasCompleto, inSampleRate, 'PCM_24')
-
-    #print("SNARE LOOP CREADO")
-    #print("-----------")
-
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
-#snare 1/8
-def makeSnarePatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
 
+# snare 1/8
+def makeSnarePatternTwo(inAudio, inBPM, inNumCompas, inSampleRate):
     # Eight note [1/8] pattern with variations
     audio = inAudio
     snareInterval = utilities.computeInterval(inBPM, inSampleRate)
     loopSnare = []
 
-    intervalOne = snareInterval/2
+    intervalOne = snareInterval / 2
     intervalTwo = snareInterval
     intervalTres = snareInterval * 1.5
     intervalCuatro = snareInterval * 2
@@ -364,23 +352,18 @@ def makeSnarePatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
         for sample in loopSnare:
             compasCompleto.append(sample)
 
-    #sf.write('../Results/LoopSnareTwo.wav', compasCompleto, inSampleRate, 'PCM_24')
-
-    #print("SNARE LOOP CREADO")
-    #print("-----------")
-
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
-#snare 1/16 dembow
-def makeSnareDembow(inAudio, inBPM, inNumCompas,inSampleRate):
 
+# snare 1/16 dembow
+def makeSnareDembow(inAudio, inBPM, inNumCompas, inSampleRate):
     # Simple sixteenth note [1/16] pattern
     audio = inAudio
     hatInterval = utilities.computeInterval(inBPM, inSampleRate)
     loopHat = []
 
-    intervalOne = hatInterval/4
-    intervalTwo = hatInterval/2
+    intervalOne = hatInterval / 4
+    intervalTwo = hatInterval / 2
     intervalTres = hatInterval * 0.75
     intervalCuatro = hatInterval
     intervalCinco = hatInterval * 1.25
@@ -396,79 +379,88 @@ def makeSnareDembow(inAudio, inBPM, inNumCompas,inSampleRate):
     intervalQuince = hatInterval * 3.75
 
     cont, cont2, cont3, cont4, cont5, cont6, cont7, cont8 = 0, 0, 0, 0, 0, 0, 0, 0
-    cont9, cont10, cont11, cont12, cont13, cont14, cont15, cont16 = 0, 0, 0, 0, 0, 0, 0, 0
+    cont9, cont10, cont11, cont12, cont13, cont14, cont15, cont16 = (
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    )
 
     for sample in range(hatInterval * 4):
         if sample < intervalOne:
-            if cont < len(audio): #1
+            if cont < len(audio):  # 1
                 loopHat.append(0)
             cont += 1
         elif sample >= intervalOne and sample < intervalTwo:
-            if cont2 < len(audio): #2
+            if cont2 < len(audio):  # 2
                 loopHat.append(0)
             cont2 += 1
         elif sample >= intervalTwo and sample < intervalTres:
-            if cont3 < len(audio): #3
+            if cont3 < len(audio):  # 3
                 loopHat.append(0)
             cont3 += 1
         elif sample >= intervalTres and sample < intervalCuatro:
-            if cont4 < len(audio): #4
+            if cont4 < len(audio):  # 4
                 loopHat.append(audio[cont4])
             else:
                 loopHat.append(0)
             cont4 += 1
         elif sample >= intervalCuatro and sample < intervalCinco:
-            if cont5 < len(audio): #5
+            if cont5 < len(audio):  # 5
                 loopHat.append(0)
             cont5 += 1
         elif sample >= intervalCinco and sample < intervalSix:
-            if cont6 < len(audio): #6
+            if cont6 < len(audio):  # 6
                 loopHat.append(0)
             cont6 += 1
         elif sample >= intervalSix and sample < intervalSeven:
-            if cont7 < len(audio): #7
+            if cont7 < len(audio):  # 7
                 loopHat.append(audio[cont7])
             else:
                 loopHat.append(0)
             cont7 += 1
         elif sample >= intervalSeven and sample < intervalEight:
-            if cont8 < len(audio): #8
+            if cont8 < len(audio):  # 8
                 loopHat.append(0)
             cont8 += 1
         elif sample >= intervalEight and sample < intervalNine:
-            if cont9 < len(audio): #9
+            if cont9 < len(audio):  # 9
                 loopHat.append(0)
             cont9 += 1
         elif sample >= intervalNine and sample < intervalTen:
-            if cont10 < len(audio): #10
+            if cont10 < len(audio):  # 10
                 loopHat.append(0)
             cont10 += 1
         elif sample >= intervalTen and sample < intervalEleven:
-            if cont11 < len(audio): #11
+            if cont11 < len(audio):  # 11
                 loopHat.append(0)
             cont11 += 1
         elif sample >= intervalEleven and sample < intervalDoce:
-            if cont12 < len(audio): #12
+            if cont12 < len(audio):  # 12
                 loopHat.append(audio[cont12])
             else:
                 loopHat.append(0)
             cont12 += 1
         elif sample >= intervalDoce and sample < intervalTrece:
-            if cont13 < len(audio): #13
+            if cont13 < len(audio):  # 13
                 loopHat.append(0)
             cont13 += 1
         elif sample >= intervalTrece and sample < intervalCatorce:
-            if cont14 < len(audio): #14
+            if cont14 < len(audio):  # 14
                 loopHat.append(0)
             cont14 += 1
         elif sample >= intervalCatorce and sample < intervalQuince:
-            if cont15 < len(audio): #15
+            if cont15 < len(audio):  # 15
                 loopHat.append(audio[cont15])
             else:
                 loopHat.append(0)
             cont15 += 1
         else:
-            if cont16 < len(audio): #16
+            if cont16 < len(audio):  # 16
                 loopHat.append(0)
             cont16 += 1
 
@@ -477,22 +469,17 @@ def makeSnareDembow(inAudio, inBPM, inNumCompas,inSampleRate):
         for sample in loopHat:
             compasCompleto.append(sample)
 
-    #sf.write('../Results/LoopHatTwo.wav', compasCompleto, inSampleRate, 'PCM_24')
-
-    #print("HIHAT LOOP CREADO")
-    #print("-----------")
-
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
-#hat 1/8
-def makeHatPatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
 
+# hat 1/8
+def makeHatPatternOne(inAudio, inBPM, inNumCompas, inSampleRate):
     # Simple eight note [1/8] pattern
     audio = inAudio
     hatInterval = utilities.computeInterval(inBPM, inSampleRate)
     loopHat = []
 
-    intervalOne = hatInterval/2
+    intervalOne = hatInterval / 2
     intervalTwo = hatInterval
     intervalTres = hatInterval * 1.5
     intervalCuatro = hatInterval * 2
@@ -558,23 +545,18 @@ def makeHatPatternOne(inAudio, inBPM, inNumCompas,inSampleRate):
         for sample in loopHat:
             compasCompleto.append(sample)
 
-    #sf.write('../Results/LoopHatOne.wav', compasCompleto, inSampleRate, 'PCM_24')
-
-    #print("HIHAT LOOP CREADO")
-    #print("-----------")
-
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
-#hat 1/16
-def makeHatPatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
 
+# hat 1/16
+def makeHatPatternTwo(inAudio, inBPM, inNumCompas, inSampleRate):
     # Simple sixteenth note [1/16] pattern
     audio = inAudio
     hatInterval = utilities.computeInterval(inBPM, inSampleRate)
     loopHat = []
 
-    intervalOne = hatInterval/4
-    intervalTwo = hatInterval/2
+    intervalOne = hatInterval / 4
+    intervalTwo = hatInterval / 2
     intervalTres = hatInterval * 0.75
     intervalCuatro = hatInterval
     intervalCinco = hatInterval * 1.25
@@ -590,7 +572,16 @@ def makeHatPatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
     intervalQuince = hatInterval * 3.75
 
     cont, cont2, cont3, cont4, cont5, cont6, cont7, cont8 = 0, 0, 0, 0, 0, 0, 0, 0
-    cont9, cont10, cont11, cont12, cont13, cont14, cont15, cont16 = 0, 0, 0, 0, 0, 0, 0, 0
+    cont9, cont10, cont11, cont12, cont13, cont14, cont15, cont16 = (
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    )
 
     for sample in range(hatInterval * 4):
         if sample < intervalOne:
@@ -695,22 +686,17 @@ def makeHatPatternTwo(inAudio, inBPM, inNumCompas,inSampleRate):
         for sample in loopHat:
             compasCompleto.append(sample)
 
-    #sf.write('../Results/LoopHatTwo.wav', compasCompleto, inSampleRate, 'PCM_24')
-
-    #print("HIHAT LOOP CREADO")
-    #print("-----------")
-
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)
 
-#hat setback 1/8
-def makeHatPatternThree(inAudio, inBPM, inNumCompas,inSampleRate):
 
+# hat setback 1/8
+def makeHatPatternThree(inAudio, inBPM, inNumCompas, inSampleRate):
     # Eight note [1/8] pattern with setback
     audio = inAudio
     hatInterval = utilities.computeInterval(inBPM, inSampleRate)
     loopHat = []
 
-    intervalOne = hatInterval/2
+    intervalOne = hatInterval / 2
     intervalTwo = hatInterval
     intervalTres = hatInterval * 1.5
     intervalCuatro = hatInterval * 2
@@ -766,10 +752,5 @@ def makeHatPatternThree(inAudio, inBPM, inNumCompas,inSampleRate):
     for compas in range(inNumCompas):
         for sample in loopHat:
             compasCompleto.append(sample)
-
-    #sf.write('../Results/LoopHatThree.wav', compasCompleto, inSampleRate, 'PCM_24')
-
-    #print("HIHAT LOOP CREADO")
-    #print("-----------")
 
     return compasCompleto, inSampleRate, (len(compasCompleto) / inSampleRate)

@@ -1,0 +1,12 @@
+
+clingo==5.*
+PyQt5==5.*
+soundfile==0.*
+pysndfx==0.*
+numpy==1.*
+scipy==1.*
+ipython==8.*
+jupyter==1.*
+pygame==2.*
+matplotlib==3.*
+black==23.*
