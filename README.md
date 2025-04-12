@@ -1,8 +1,10 @@
-## Clingo Drum Machine
+## 🥁 Clingo Drum Machine
 
-<img width="995" alt="builder" src="https://user-images.githubusercontent.com/47612276/143788853-f8e6d8c9-085d-445d-990b-ada0aa87f816.png">
+https://github.com/user-attachments/assets/2125b154-0439-4d83-9fea-bf9eb8464c61
 
-Interactive drum machine using Python and Clingo where you can select which sound will be the kick, the snare, and the hihat. The solver will then create a sound design and a beat, providing you with the best loop based on centroid, spread, and maximum peak. The solver is based on Answer Set Programming using Clingo.
+This project is an interactive drum machine built with Python and Clingo. It allows you to choose which sounds will represent the kick, snare, and hi-hat. Using Answer Set Programming (ASP) via Clingo, the system then analyzes and selects the best combination of sound design and rhythm pattern.
+
+The solver evaluates multiple beat configurations and selects the optimal loop based on centroid, spectral spread, and maximum peak, aiming to create a musically cohesive and dynamic groove. This fusion of audio analysis and logic programming results in a powerful tool for generative beat creation.
 
 ## Local running
 
